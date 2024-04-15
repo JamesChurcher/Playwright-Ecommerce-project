@@ -9,6 +9,7 @@ import AccountPagePOM from '../POMClasses/AccountPage';
 import AccountOrdersPagePOM from '../POMClasses/AccountOrdersPage';
 
 import data from '../testData/testProducts.json';
+import billingDetailsData from '../testData/testBillingInfo.json'
 
 const discountCode = {code: "nfocus", discount: 25};
 
@@ -63,6 +64,8 @@ test.describe("my testcases", () => {
 
 		expect(actualDiscount).toEqual((25).toFixed(2))				//Assert the amount deducted from discount
 		expect(total.toFixed(2)).toEqual(expectedTotal);			//Assert the price is correct
+
+		await page.screenshot({ path: 'screenshots/Test1_1.png', fullPage: true });		//Take Screenshot
 	})
 
 	test("Login and checkout with a cheque", async ({page}) => {
@@ -78,10 +81,9 @@ test.describe("my testcases", () => {
 		//Checkout
 		await navbar.GoCheckout();
 		const checkoutPage = new CheckoutPagePOM(page);
-		// await checkoutPage.ClickCheck();		//Use cheque as payment method
-		// await checkoutPage.PlaceOrder();
+		await checkoutPage.CheckoutExpectSuccess(billingDetailsData[0]);
 
-		await checkoutPage.SetBillingInfo("James", "Churcher", "Vietnam", "peeland", "London", "Lu8Gh2", "02783671");
+		await page.screenshot({ path: 'screenshots/Test2_1.png', fullPage: true });		//Take Screenshot
 
 		//Get the order number
 		const orderSummaryPage = new OrderSummaryPagePOM(page);
@@ -100,6 +102,6 @@ test.describe("my testcases", () => {
 		
 		expect(allOrderNums).toContain(orderNumber);		//Assert new order number is listed on the page
 
-		await page.screenshot({ path: 'screenshot.png', fullPage: true });		//Take Screenshot
+		await page.screenshot({ path: 'screenshots/Test2_2.png', fullPage: true });		//Take Screenshot
 	})
 })

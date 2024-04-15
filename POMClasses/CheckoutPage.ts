@@ -20,7 +20,7 @@ export default class CheckoutPage
     #city :Locator;
     #postcode :Locator;
     #phoneNumber :Locator;
-    #paymentMethod :Locator;
+    #paymentMethods;
 
     constructor(page :Page) {
         this.#page = page
@@ -30,15 +30,6 @@ export default class CheckoutPage
         this.#paymentCheck = page.getByText("Check payments");
         this.#paymentCash = page.getByText("Cash on delivery");
 
-        // this.#firstName = page.getByLabel('First name');
-        // this.#lastName = page.getByLabel('Last name');
-        // this.#country = page.getByLabel('Country');
-        // this.#street = page.getByLabel('Street address');
-        // this.#city = page.getByLabel('Town / City');
-        // this.#postcode = page.getByLabel('Postcode');
-        // this.#phoneNumber = page.getByLabel('Phone');
-        // this.#paymentMethod = null;
-
         this.#firstName = page.getByRole('textbox', { name: 'First name' });
         this.#lastName = page.getByRole('textbox', { name: 'Last name' });
         this.#country = page.locator('#billing_country');
@@ -46,7 +37,10 @@ export default class CheckoutPage
         this.#city = page.getByRole('textbox', { name: 'Town / City' });
         this.#postcode = page.getByRole('textbox', { name: 'Postcode' });
         this.#phoneNumber = page.getByLabel('Phone');
-        // this.#paymentMethod = null;
+        this.#paymentMethods = {
+            "cheque": page.getByText('Check payments'),
+            "cod": page.getByText('Cash on delivery'),
+        }
     }
 
     //Service methods
@@ -79,7 +73,7 @@ export default class CheckoutPage
     }
 
     public async SetCity(city :string){
-        await this.#firstName.fill(city);
+        await this.#city.fill(city);
     }
 
     public async SetPostcode(postcode :string){
@@ -88,6 +82,10 @@ export default class CheckoutPage
 
     public async SetPhoneNumber(phoneNumber :string){
         await this.#phoneNumber.fill(phoneNumber);
+    }
+
+    public async SelectPaymentMethod(paymentMethod :string){
+        await this.#paymentMethods[paymentMethod].click();
     }
 
     //Higher level service methods
@@ -101,7 +99,22 @@ export default class CheckoutPage
         await this.SetPhoneNumber(pn);
     }
 
-    public async CheckoutExpectSuccess(){
-        
+    public async CheckoutExpectSuccess(billingDetails){
+        //Set text fields
+        await this.SetFirstName(billingDetails.firstName);
+        await this.SetLastName(billingDetails.lastName);
+        await this.SetStreet(billingDetails.street);
+        await this.SetCity(billingDetails.city);
+        await this.SetPostcode(billingDetails.postcode);
+        await this.SetPhoneNumber(billingDetails.phoneNumber);
+
+        //Select from dropdown
+        await this.SelectCountry(billingDetails.country);
+
+        //Set payment method
+        await this.SelectPaymentMethod(billingDetails.paymentMethod);
+
+        //Checkout
+        await this.PlaceOrder();
     }
 }
