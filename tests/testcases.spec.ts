@@ -8,7 +8,9 @@ import OrderSummaryPagePOM from '../POMClasses/OrderSummaryPage';
 import AccountPagePOM from '../POMClasses/AccountPage';
 import AccountOrdersPagePOM from '../POMClasses/AccountOrdersPage';
 
-import data from '../testData.json';
+import data from '../testData/testProducts.json';
+
+const discountCode = {code: "nfocus", discount: 25};
 
 test.describe("my testcases", () => {
 	test.beforeEach("Setup => Login", async ({page}) => {
@@ -47,7 +49,7 @@ test.describe("my testcases", () => {
 		await navbar.GoCart();
 		const cartPage = new CartPagePOM(page);
 
-		await cartPage.ApplyDiscount("nfocus");		//Apply discount code	//TODO broken wait function
+		await cartPage.ApplyDiscount("nfocus");		//Apply discount code
 
 		let total = await cartPage.GetTotal();
 		let subtotal = await cartPage.GetSubtotal();
@@ -56,8 +58,11 @@ test.describe("my testcases", () => {
 
 		console.log(`Total: £${total}\nSubTotal: £${subtotal}\nShipping: £${shipping}\nDiscount: £${discount}\n`)
 
-		expect((discount/subtotal * 100).toFixed(2)).toEqual((25).toFixed(2))					//Assert the amount deducted from discount
-		expect(total).toEqual((subtotal + shipping - discount).toFixed(2));		//Assert the price is correct
+		let actualDiscount = (discount/subtotal * 100).toFixed(2)
+		let expectedTotal = (subtotal + shipping - discount).toFixed(2)
+
+		expect(actualDiscount).toEqual((25).toFixed(2))				//Assert the amount deducted from discount
+		expect(total.toFixed(2)).toEqual(expectedTotal);			//Assert the price is correct
 	})
 
 	test("Login and checkout with a cheque", async ({page}) => {
@@ -73,8 +78,10 @@ test.describe("my testcases", () => {
 		//Checkout
 		await navbar.GoCheckout();
 		const checkoutPage = new CheckoutPagePOM(page);
-		await checkoutPage.ClickCheck();		//Use cheque as payment method
-		await checkoutPage.PlaceOrder();
+		// await checkoutPage.ClickCheck();		//Use cheque as payment method
+		// await checkoutPage.PlaceOrder();
+
+		await checkoutPage.SetBillingInfo("James", "Churcher", "Vietnam", "peeland", "London", "Lu8Gh2", "02783671");
 
 		//Get the order number
 		const orderSummaryPage = new OrderSummaryPagePOM(page);

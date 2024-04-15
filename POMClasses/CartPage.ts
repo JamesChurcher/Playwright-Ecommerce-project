@@ -67,22 +67,6 @@ export default class CartPagePOM
         await this.#discountField.fill(coupon);
         await this.#discountSubmit.click();
 
-        // await this.#page.waitForFunction(() => this.#coupon.isVisible());   //Broken
-
-        // const myWait = this.#page.waitForFunction(() => this.#coupon.isVisible());
-        // await myWait;
-
-        // await this.#page.waitForFunction(selector => selector.isVisible(), this.#coupon);
-
-        // const watchDog = this.#page.waitForFunction(() => window.innerWidth < 1000);
-        // await this.#page.setViewportSize({ width: 50, height: 50 });
-        // await watchDog;
-
-        await this.#coupon.waitFor({ state: "visible" });
-
-        console.log("Is discount field visible " + await this.#discountField.isVisible());
-        console.log("Is discount visible " + await this.#coupon.isVisible());
-
-        // console.log("Hello Waited");
+        await this.#coupon.waitFor({ state: "visible" });   //Wait for coupon to be applied
     }
 }

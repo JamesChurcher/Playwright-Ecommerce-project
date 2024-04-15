@@ -1,0 +1,12 @@
+[
+    {
+        "firstName": "Jeff",
+        "lastName": "Bezos",
+        "country": "United Kingdom (UK)",
+        "street": "Amazon lane",
+        "city": "New York",
+        "postcode": "W1J 7NT",
+        "phoneNumber": "07946 123400",
+        "paymentMethod": "cheque"
+    }
+]
