@@ -16,15 +16,26 @@ const discountCode = {code: "nfocus", discount: 25};
 test.describe("my testcases", () => {
 	test.beforeEach("Setup => Login", async ({page}) => {
 		//Navigate to site
-		await page.goto('https://www.edgewordstraining.co.uk/demo-site/');
+		if (!process.env.URL){
+			throw new Error("URL is undefined");
+		}
+		await page.goto(process.env.URL);
+
+		console.log("URL " + process.env.URL)
+
 		await page.getByRole('link', { name: 'Dismiss' }).click();		//Dismiss popup
 
 		//Login
 		const navbar = new NavBarPOM(page);
 		await navbar.GoAccount();		//Go to account page
 
+		if (!process.env.USER_NAME || !process.env.PASSWORD){
+			throw new Error("USER_NAME or PASSWORD are undefined");
+		}
+		console.log(`username ${process.env.USER_NAME} password ${process.env.PASSWORD}`);
+
 		const loginPage = new LoginPagePOM(page);
-		await loginPage.Login('newexampleemail@email.com', 'MyPassword12345@');
+		await loginPage.Login(process.env.USER_NAME, process.env.PASSWORD);
 	})
 
 	test.afterEach("Teardown => Logout", async ({page}) => {
