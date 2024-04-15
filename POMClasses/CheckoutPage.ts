@@ -48,14 +48,6 @@ export default class CheckoutPage
         await this.#placeOrderButton.click();
     }
 
-    public async ClickCheck(){
-        await this.#paymentCheck.click();
-    }
-
-    public async ClickCash(){
-        await this.#paymentCash.click();
-    }
-
     public async SetFirstName(firstName :string){
         await this.#firstName.fill(firstName);
     }
@@ -89,16 +81,6 @@ export default class CheckoutPage
     }
 
     //Higher level service methods
-    public async SetBillingInfo(fn, ln, co, st, cty, pc, pn){
-        await this.SetFirstName(fn);
-        await this.SetLastName(ln);
-        await this.SelectCountry(co);
-        await this.SetStreet(st);
-        await this.SetCity(cty);
-        await this.SetPostcode(pc);
-        await this.SetPhoneNumber(pn);
-    }
-
     public async CheckoutExpectSuccess(billingDetails){
         //Set text fields
         await this.SetFirstName(billingDetails.firstName);
