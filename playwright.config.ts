@@ -18,7 +18,6 @@ require('dotenv').config();
 export default defineConfig({
   //Timeout usually 30s
   timeout: 30000,
-  // timeout: 10000,
 
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -40,7 +39,7 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     launchOptions: {
-      slowMo: 100,
+      slowMo: 200,
     }
   },
 

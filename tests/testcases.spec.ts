@@ -39,8 +39,35 @@ test.describe("my testcases", () => {
 	})
 
 	test.afterEach("Teardown => Logout", async ({page}) => {
-		//Logout
 		const navbar = new NavBarPOM(page);
+
+		//Empty cart
+		await navbar.GoCart();
+		
+		const cartPage = new CartPagePOM(page);
+		await cartPage.MakeCartEmpty();
+
+		// const rm = page.getByLabel('Remove this item');
+		// let count = await rm.count();
+        // for (const element of await rm.all()){
+        //     await element.click();
+		// 	await page.waitForTimeout(2000);
+        //     console.log("Clicked")
+        // }
+
+		// const rm = page.getByLabel('Remove this item');
+		// while (await rm.count() > 0){
+		// 	console.log("count is " + await rm.count())
+
+		// 	let element = rm.first();
+
+        //     await element.click();
+		// 	await page.waitForTimeout(2000);
+
+        //     console.log("Clicked")
+        // }
+
+		//Logout
 		await navbar.GoAccount();		//Go to account page
 		
 		const accountPage = new AccountPagePOM(page);
