@@ -10,25 +10,45 @@ export default class ShopPagePOM
 
     //Locator declarations
     #addToCartButtons :Locator;
+    #numItemsInCart :Locator;
 
     constructor(page :Page) {
         this.#page = page
 
         //Locators
         this.#addToCartButtons = page.getByLabel(/Add “.*” to your cart/);
-        page.getByText("Beanie")
+        this.#numItemsInCart = page.getByText(/\d+ items?/);
+        // this.#numItemsInCart = page.getByTitle("View your shopping cart").locator(".count");
+    }
+
+    private async GetCartQuantity(){
+        let quantity = (await this.#numItemsInCart.innerText()).replace(/\D/g, "");
+        return Number(quantity);
     }
 
     //Service methods
     public async AddToCart(item :string){
         const btn = this.#page.getByLabel("Add “"+ item +"” to your cart");
 
-        if (await btn.isVisible()){
-            await btn.click();
-            console.log(`Added ${item} to the cart`)
-        }
-        else {
+        //Throw error if item is not on store page
+        if (!await btn.isVisible()){
             throw new Error(`Could not find product ${item} on the store page"`)
+        }
+
+        //Quantity of cart before adding
+        let count = await this.GetCartQuantity();
+        count++;
+        
+        await btn.click();
+        console.log(`Added ${item} to the cart`)
+
+        //Wait for cart item to increment
+        let attempts = 10;
+        for (let i=0; i<attempts; i++){
+            if (await this.GetCartQuantity() >= count){
+                break;
+            }
+            await this.#page.waitForTimeout(100);
         }
     }
 }

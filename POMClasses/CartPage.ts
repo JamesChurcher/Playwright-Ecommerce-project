@@ -81,19 +81,6 @@ export default class CartPagePOM
     }
 
     public async MakeCartEmpty(){
-        // (await this.#removeFromCart.all()).forEach(async element => {
-        //     await element.click();
-        //     console.log("Clicked")
-        // });
-
-        // let count = await this.#removeFromCart.count();
-        // for (const element of await this.#removeFromCart.all()){
-        //     await element.click();
-        //     count--;
-        //     await this.#page.waitForFunction(async () => (await this.#removeFromCart.count()) == count)
-        //     console.log("Clicked")
-        // }
-
         this.RemoveDiscount();
 
 		while (await this.#removeFromCart.count() > 0){
@@ -102,7 +89,7 @@ export default class CartPagePOM
 			let element = this.#removeFromCart.first();
 
             await element.click();
-			// await this.#page.waitForTimeout(2000);
+			await this.#page.waitForTimeout(1000);
 
             console.log("Clicked")
         }
