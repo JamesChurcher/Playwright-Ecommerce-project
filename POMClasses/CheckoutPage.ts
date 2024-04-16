@@ -29,14 +29,15 @@ export default class CheckoutPage
         this.#placeOrderButton = page.getByRole('button', { name: 'Place order' });
         this.#paymentCheck = page.getByText("Check payments");
         this.#paymentCash = page.getByText("Cash on delivery");
-
-        this.#firstName = page.getByRole('textbox', { name: 'First name' });
-        this.#lastName = page.getByRole('textbox', { name: 'Last name' });
+        
+        this.#firstName = page.locator('#billing_first_name');
+        this.#lastName = page.locator('#billing_last_name');
         this.#country = page.locator('#billing_country');
-        this.#street = page.getByRole('textbox', { name: 'Street address' });
-        this.#city = page.getByRole('textbox', { name: 'Town / City' });
-        this.#postcode = page.getByRole('textbox', { name: 'Postcode' });
+        this.#street = page.locator('#billing_address_1');
+        this.#city = page.locator('#billing_city');
+        this.#postcode = page.locator('#billing_postcode');
         this.#phoneNumber = page.getByLabel('Phone');
+
         this.#paymentMethods = {
             "cheque": page.getByText('Check payments'),
             "cod": page.getByText('Cash on delivery'),
