@@ -91,8 +91,6 @@ export default class CartPagePOM
 
         //Remove items
 		while (await this.#removeFromCart.count() > 0){
-			console.log("count is " + await this.#removeFromCart.count())
-
             //Quantity of cart before decrementing
             let count = await this.#removeFromCart.count();
             count--;
@@ -110,8 +108,6 @@ export default class CartPagePOM
                 }
                 await this.#page.waitForTimeout(100);
             }
-
-            console.log("Clicked")
         }
     }
 }

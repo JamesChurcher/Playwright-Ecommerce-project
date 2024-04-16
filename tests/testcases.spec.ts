@@ -21,9 +21,9 @@ test.describe("my testcases", () => {
 		if (!process.env.URL){
 			throw new Error("URL is undefined");
 		}
-		await page.goto(process.env.URL);
+		console.log("URL " + process.env.URL);
 
-		console.log("URL " + process.env.URL)
+		await page.goto(process.env.URL);
 
 		await page.getByRole('link', { name: 'Dismiss' }).click();		//Dismiss popup
 
@@ -34,10 +34,11 @@ test.describe("my testcases", () => {
 		if (!process.env.USER_NAME || !process.env.PASSWORD){
 			throw new Error("USER_NAME or PASSWORD are undefined");
 		}
-		console.log(`username ${process.env.USER_NAME} password ${process.env.PASSWORD}`);
+		console.log("USER_NAME and PASSWORD have been set");
 
 		const loginPage = new LoginPagePOM(page);
 		await loginPage.Login(process.env.USER_NAME, process.env.PASSWORD);
+		console.log("Login successful");
 
 		console.log("-----Setup Complete-----\n");
 	})
@@ -48,16 +49,18 @@ test.describe("my testcases", () => {
 		const navbar = new NavBarPOM(page);
 
 		//Empty cart
-		await navbar.GoCart();
+		await navbar.GoCart();		//Go to cart page
 		
 		const cartPage = new CartPagePOM(page);
 		await cartPage.MakeCartEmpty();
+		console.log("Emptied cart successfully")
 
 		//Logout
 		await navbar.GoAccount();		//Go to account page
 		
 		const accountPage = new AccountPagePOM(page);
 		await accountPage.Logout();
+		console.log("Logout successful")
 		
 		console.log("-----Teardown Complete-----");
 	})
@@ -67,9 +70,12 @@ test.describe("my testcases", () => {
 		const navbar = new NavBarPOM(page);
 		await navbar.GoShop();		//Go to shop page
 
+		console.log("Add items to cart")
 		const shopPage = new ShopPagePOM(page);
 		for(let i=0; i<data.length; i++){
-			await shopPage.AddToCart(data[i].product);
+			let item = data[i].product;
+			await shopPage.AddToCart(item);
+			console.log(`Added \"${item}\" to the cart`)
 		}
 
 		//Cart
@@ -77,13 +83,14 @@ test.describe("my testcases", () => {
 		const cartPage = new CartPagePOM(page);
 
 		await cartPage.ApplyDiscount("nfocus");		//Apply discount code
+		console.log(`Applied discount code \"${"nfocus"}\" successfully`);
 
 		let total = await cartPage.GetTotal();
 		let subtotal = await cartPage.GetSubtotal();
 		let shipping = await cartPage.GetShipping();
 		let discount = await cartPage.GetCoupon();
 
-		console.log(`Total: £${total}\nSubTotal: £${subtotal}\nShipping: £${shipping}\nDiscount: £${discount}\n`)
+		console.log(`Total: £${total}\nSubTotal: £${subtotal}\nShipping: £${shipping}\nDiscount: £${discount}`)
 
 		let actualDiscount = (discount/subtotal * 100).toFixed(2)
 		let expectedTotal = (subtotal + shipping - discount).toFixed(2)
@@ -99,15 +106,19 @@ test.describe("my testcases", () => {
 		const navbar = new NavBarPOM(page);
 		await navbar.GoShop();		//Go to shop page
 
+		console.log("Add items to cart")
 		const shopPage = new ShopPagePOM(page);
 		for(let i=0; i<data.length; i++){
-			await shopPage.AddToCart(data[i].product);
+			let item = data[i].product;
+			await shopPage.AddToCart(item);
+			console.log(`Added \"${item}\" to the cart`)
 		}
 
 		//Checkout
 		await navbar.GoCheckout();
 		const checkoutPage = new CheckoutPagePOM(page);
 		await checkoutPage.CheckoutExpectSuccess(billingDetailsData[0]);
+		console.log("Checkout successful")
 
 		await page.screenshot({ path: 'screenshots/Test2_1.png', fullPage: true });		//Take Screenshot
 

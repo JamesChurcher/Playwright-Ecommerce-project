@@ -40,7 +40,6 @@ export default class ShopPagePOM
         
         //Click add to cart button
         await btn.click();
-        console.log(`Added ${item} to the cart`)
 
         //Wait for cart item to increment
         let attempts = 10;
