@@ -18,7 +18,6 @@ export default class ShopPagePOM
         //Locators
         this.#addToCartButtons = page.getByLabel(/Add “.*” to your cart/);
         this.#numItemsInCart = page.getByText(/\d+ items?/);
-        // this.#numItemsInCart = page.getByTitle("View your shopping cart").locator(".count");
     }
 
     private async GetCartQuantity(){
@@ -39,6 +38,7 @@ export default class ShopPagePOM
         let count = await this.GetCartQuantity();
         count++;
         
+        //Click add to cart button
         await btn.click();
         console.log(`Added ${item} to the cart`)
 

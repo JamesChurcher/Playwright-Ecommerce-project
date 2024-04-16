@@ -67,6 +67,7 @@ export default class CartPagePOM
         return await this.#cartEmpty.isVisible();
     }
 
+    //Fill in and submit the given coupon
     public async ApplyDiscount(coupon :string){
         await this.#discountField.fill(coupon);
         await this.#discountSubmit.click();
@@ -74,22 +75,41 @@ export default class CartPagePOM
         await this.#coupon.waitFor({ state: "visible" });   //Wait for coupon to be applied
     }
 
+    //Remove any applied coupon
     public async RemoveDiscount(){
         if(await this.#discountRemove.isVisible()){
             await this.#discountRemove.click();
         }
+
+        await this.#coupon.waitFor({ state: "hidden" });    //Wait for coupon to be removed
     }
 
+    //Method empties cart by removing discount and all items
     public async MakeCartEmpty(){
-        this.RemoveDiscount();
+        //Remove discount
+        await this.RemoveDiscount();
 
+        //Remove items
 		while (await this.#removeFromCart.count() > 0){
 			console.log("count is " + await this.#removeFromCart.count())
 
-			let element = this.#removeFromCart.first();
+            //Quantity of cart before decrementing
+            let count = await this.#removeFromCart.count();
+            count--;
 
+			let element = this.#removeFromCart.first();     //First item in cart
+
+            //Click to remove first item from the cart
             await element.click();
-			await this.#page.waitForTimeout(1000);
+
+            //Wait for number of items in cart to decrement
+            let attempts = 10;
+            for (let i=0; i<attempts; i++){
+                if (await this.#removeFromCart.count() <= count){
+                    break;
+                }
+                await this.#page.waitForTimeout(100);
+            }
 
             console.log("Clicked")
         }
