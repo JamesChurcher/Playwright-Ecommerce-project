@@ -1,14 +1,16 @@
 import { test, expect } from '@playwright/test';
 import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
 
-import LoginPagePOM from "../POMClasses/LoginPage";
-import ShopPagePOM from '../POMClasses/ShopPage';
-import NavBarPOM from '../POMClasses/NavBar';
-import CartPagePOM from '../POMClasses/CartPage';
-import CheckoutPagePOM from '../POMClasses/CheckoutPage';
-import OrderSummaryPagePOM from '../POMClasses/OrderSummaryPage';
-import AccountPagePOM from '../POMClasses/AccountPage';
-import AccountOrdersPagePOM from '../POMClasses/AccountOrdersPage';
+import {
+	LoginPagePOM,
+	ShopPagePOM,
+	NavBarPOM,
+	CartPagePOM,
+	CheckoutPagePOM,
+	OrderSummaryPagePOM,
+	AccountPagePOM,
+	AccountOrdersPagePOM,
+} from '../POMClasses/POMClasses'
 
 import data from '../testData/testData.json';
 
@@ -19,7 +21,6 @@ test.describe("my testcases", () => {
 
 	test.beforeEach("Setup => Login", async ({ page }) => {
 		console.log("-----Setup-----");
-		// console.log("\u001b[1;32m Test Pass;")
 		
 		//Set up test data
 		if (!process.env.DATAINDEX) {
