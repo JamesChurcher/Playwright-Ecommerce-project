@@ -1,7 +1,7 @@
 // James Churcher
 // 03/04/24
 
-import { Locator, Page, selectors } from "@playwright/test";
+import { Locator, Page } from "@playwright/test";
 
 //A POM class for the shop page
 export default class CartPagePOM
