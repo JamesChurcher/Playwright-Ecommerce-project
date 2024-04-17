@@ -1,4 +1,6 @@
 import { test, expect, Locator } from '@playwright/test';
+import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
+
 import LoginPagePOM from "../POMClasses/LoginPage";
 import ShopPagePOM from '../POMClasses/ShopPage';
 import NavBarPOM from '../POMClasses/NavBar';
@@ -65,7 +67,7 @@ test.describe("my testcases", () => {
 		console.log("-----Teardown Complete-----");
 	})
 
-	test("Login and apply discount", async ({page}) => {
+	test("Login and apply discount", async ({page}, testInfo) => {
 		//Shop
 		const navbar = new NavBarPOM(page);
 		await navbar.GoShop();		//Go to shop page
@@ -98,10 +100,10 @@ test.describe("my testcases", () => {
 		expect(actualDiscount).toEqual((25).toFixed(2))				//Assert the amount deducted from discount
 		expect(total.toFixed(2)).toEqual(expectedTotal);			//Assert the price is correct
 
-		await page.screenshot({ path: 'screenshots/Test1_1.png', fullPage: true });		//Take Screenshot
+		await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
 	})
 
-	test("Login and checkout with a cheque", async ({page}) => {
+	test("Login and checkout with a cheque", async ({page}, testInfo) => {
 		//Shop
 		const navbar = new NavBarPOM(page);
 		await navbar.GoShop();		//Go to shop page
@@ -120,7 +122,7 @@ test.describe("my testcases", () => {
 		await checkoutPage.CheckoutExpectSuccess(billingDetailsData[0]);
 		console.log("Checkout successful")
 
-		await page.screenshot({ path: 'screenshots/Test2_1.png', fullPage: true });		//Take Screenshot
+		await TakeAndAttachScreenshot(page, testInfo, "Test2_1", "Order summary after checkout");		//Take Screenshot
 
 		//Get the order number
 		const orderSummaryPage = new OrderSummaryPagePOM(page);
@@ -139,6 +141,6 @@ test.describe("my testcases", () => {
 		
 		expect(allOrderNums).toContain(orderNumber);		//Assert new order number is listed on the page
 
-		await page.screenshot({ path: 'screenshots/Test2_2.png', fullPage: true });		//Take Screenshot
+		await TakeAndAttachScreenshot(page, testInfo, "Test2_2", "All orders listed under this account");		//Take Screenshot
 	})
 })

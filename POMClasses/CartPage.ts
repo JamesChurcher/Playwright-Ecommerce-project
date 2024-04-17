@@ -101,7 +101,7 @@ export default class CartPagePOM
             await element.click();
 
             //Wait for number of items in cart to decrement
-            let attempts = 10;
+            let attempts = 15;
             for (let i=0; i<attempts; i++){
                 if (await this.#removeFromCart.count() <= count){
                     break;
