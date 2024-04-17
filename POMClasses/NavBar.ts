@@ -6,7 +6,7 @@ import { Locator, Page } from "@playwright/test";
 //A POM class for the navbar
 export default class NavBarPOM
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declarations
     #shopButton :Locator;
@@ -17,7 +17,7 @@ export default class NavBarPOM
     #popup :Locator;
 
     constructor(page :Page) {
-        this.#page = page;
+        this.page = page;
 
         //Locators
         this.#shopButton = page.locator('#menu-main').getByRole('link', { name: 'Shop' });
@@ -30,18 +30,22 @@ export default class NavBarPOM
     //Service methods
     public async GoShop(){
         await this.#shopButton.click();
+        await this.page.waitForURL(/shop/);
     }
 
     public async GoAccount(){
         await this.#accountButton.click();
+        await this.page.waitForURL(/account/);
     }
 
     public async GoCart(){
         await this.#cartButton.click();
+        await this.page.waitForURL(/cart/);
     }
 
     public async GoCheckout(){
         await this.#checkoutButton.click();
+        await this.page.waitForURL(/checkout/);
     }
 
     //Dismiss popup

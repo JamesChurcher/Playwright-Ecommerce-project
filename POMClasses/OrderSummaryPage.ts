@@ -6,13 +6,13 @@ import { Locator, Page } from "@playwright/test";
 //A POM class for the order summar page appearing after checkout
 export default class OrderSummaryPagePOM
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declarations
     #orderNumber :Locator;
 
     constructor(page :Page) {
-        this.#page = page
+        this.page = page
 
         //Locators
         this.#orderNumber = page.getByText("Order number");

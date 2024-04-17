@@ -6,20 +6,28 @@ import { Locator, Page } from "@playwright/test";
 //A POM class to represent the login page
 export default class LoginPagePOM
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declarations
     #usernameField :Locator;
     #passwordField :Locator;
     #submitButton :Locator;
+    #logoutButton :Locator;
+
+    //Wait declarations
+    // #loggedInWait :Promise<void>;
 
     constructor(page: Page) {
-        this.#page = page;
+        this.page = page;
 
         //Locators
         this.#usernameField = page.getByLabel("username");
         this.#passwordField = page.locator('#password');
         this.#submitButton = page.getByRole("button", { name : "Log in" });
+        this.#logoutButton = page.getByRole('link', { name: 'Logout' });
+
+        //Waits
+        // this.#loggedInWait = page.getByRole('link', { name: 'Logout' }).waitFor({state: 'visible', timeout: 4000});
     }
 
     //Service methods
@@ -42,5 +50,13 @@ export default class LoginPagePOM
         await this.SetUsername(username);
         await this.SetPassword(password);
         await this.SubmitLogin();
+        
+        try {
+            await this.#logoutButton.waitFor({state: 'visible', timeout: 4000});
+        }
+        catch (error){
+            error.message = "Could not login\n" + error.message;
+            throw error;
+        }
     }
 }

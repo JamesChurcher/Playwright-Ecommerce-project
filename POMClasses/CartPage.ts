@@ -6,7 +6,7 @@ import { Locator, Page } from "@playwright/test";
 //A POM class for the shop page
 export default class CartPagePOM
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declaratons
     #subtotal :Locator;
@@ -21,8 +21,12 @@ export default class CartPagePOM
     #discountSubmit :Locator;
     #discountRemove :Locator;
 
+    //Wait declarations
+    // #appliedDiscountWait :Promise<void>;
+    // #removedDiscountWait :Promise<void>;
+
     constructor(page :Page) {
-        this.#page = page;
+        this.page = page;
 
         //Locators
         this.#total = page.locator(".order-total");
@@ -36,6 +40,10 @@ export default class CartPagePOM
         this.#discountField = page.getByPlaceholder('Coupon code');
         this.#discountSubmit = page.getByRole('button', { name: 'Apply coupon' });
         this.#discountRemove = page.getByRole('link', { name: '[Remove]' });
+
+        //Waits
+        // this.#appliedDiscountWait = this.#coupon.waitFor({ state: "visible", timeout: 4000 });
+        // this.#removedDiscountWait = this.#coupon.waitFor({ state: "hidden", timeout: 4000 });
     }
 
     //Service methods
@@ -71,8 +79,14 @@ export default class CartPagePOM
     public async ApplyDiscount(coupon :string){
         await this.#discountField.fill(coupon);
         await this.#discountSubmit.click();
-
-        await this.#coupon.waitFor({ state: "visible" });   //Wait for coupon to be applied
+        
+        try {
+            await this.#coupon.waitFor({ state: "visible", timeout: 4000 });    //Wait for coupon to be applied
+        }
+        catch (error){
+            error.message = "Could not apply coupon code / coupon code not accepted\n" + error.message;
+            throw error;    
+        }
     }
 
     //Remove any applied coupon
@@ -81,7 +95,13 @@ export default class CartPagePOM
             await this.#discountRemove.click();
         }
 
-        await this.#coupon.waitFor({ state: "hidden" });    //Wait for coupon to be removed
+        try {
+            await this.#coupon.waitFor({ state: "hidden", timeout: 4000 });    //Wait for coupon to be removed
+        }
+        catch (error){
+            error.message = "Could not remove coupon code\n" + error.message;
+            throw error;    
+        }
     }
 
     //Method empties cart by removing discount and all items
@@ -101,12 +121,17 @@ export default class CartPagePOM
             await element.click();
 
             //Wait for number of items in cart to decrement
+            let flag = false;
             let attempts = 15;
             for (let i=0; i<attempts; i++){
                 if (await this.#removeFromCart.count() <= count){
+                    flag = true;
                     break;
                 }
-                await this.#page.waitForTimeout(100);
+                await this.page.waitForTimeout(100);
+            }
+            if (!flag){
+                throw new Error("Timed out waiting for the cart quantity to decrement after removing an item")
             }
         }
     }

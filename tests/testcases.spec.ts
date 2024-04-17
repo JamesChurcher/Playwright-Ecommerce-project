@@ -19,12 +19,16 @@ test.describe("my testcases", () => {
 
 	test.beforeEach("Setup => Login", async ({ page }) => {
 		console.log("-----Setup-----");
+		// console.log("\u001b[1;32m Test Pass;")
 		
 		//Set up test data
 		if (!process.env.DATAINDEX) {
-			throw new Error("URL is undefined");
+			process.env.DATAINDEX = '0';
+			console.log("No test data index set, using default 0");
 		}
-		console.log("Test data index is " + process.env.DATAINDEX);
+		else{
+			console.log("Test data index is " + process.env.DATAINDEX);
+		}
 
 		let testData = data[process.env.DATAINDEX]
 
@@ -114,6 +118,13 @@ test.describe("my testcases", () => {
 		expect(actualDiscount, "Incorrect discount applied").toEqual((testDiscount.value).toFixed(2))	//Assert the amount deducted from discount
 		expect(total.toFixed(2), "Incorrect final total").toEqual(expectedTotal);						//Assert the price is correct
 
+		//Reporting
+		console.log("\u001b[1;32m Test Pass\x1b[0m")
+		console.table({
+			"Discount":{"Expected": (testDiscount.value).toFixed(2)+"%","Actual": actualDiscount+"%"},
+			"Total":{"Expected": "£"+expectedTotal,"Actual": "£"+total.toFixed(2)}
+		})
+
 		await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
 	})
 
@@ -155,6 +166,8 @@ test.describe("my testcases", () => {
 		console.log("All order numbers listed: " + allOrderNums);
 
 		expect(allOrderNums, "Order not listed under this account").toContain(orderNumber);		//Assert new order number is listed on the page
+
+		console.log("\u001b[1;32m Test Pass\x1b[0m")
 
 		await TakeAndAttachScreenshot(page, testInfo, "Test2_2", "All orders listed under this account");		//Take Screenshot
 	})

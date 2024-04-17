@@ -6,7 +6,7 @@ import { Locator, Page } from "@playwright/test";
 //A POM class for the checkout page
 export default class CheckoutPage
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declarations
     #placeOrderButton :Locator;
@@ -18,13 +18,13 @@ export default class CheckoutPage
     #city :Locator;
     #postcode :Locator;
     #phoneNumber :Locator;
-    #paymentMethods;
+    #paymentMethods :Object;
 
-    //Attributes
-    #orderReceivedWait :Promise<any>;
+    //Wait declarations
+    // #orderReceivedWait :Promise<any>;
 
     constructor(page :Page) {
-        this.#page = page
+        this.page = page
 
         //Locators
         this.#placeOrderButton = page.getByRole('button', { name: 'Place order' });
@@ -42,7 +42,8 @@ export default class CheckoutPage
             "cod": page.getByText('Cash on delivery'),
         }
         
-        this.#orderReceivedWait = this.#page.waitForURL(/\/order-received\//);
+        //Waits
+        // this.#orderReceivedWait = this.#page.waitForURL(/\/order-received\//, {timeout: 4000});
     }
 
     //Service methods
@@ -102,6 +103,12 @@ export default class CheckoutPage
         await this.PlaceOrder();
 
         //Wait for order summary page
-        await this.#orderReceivedWait;
+        try {
+            await this.page.waitForURL(/order-received/, {timeout: 4000});
+        }
+        catch (error){
+            error.message = "Could not place order, we are not currently on the order summary page\n" + error.message;
+            throw error;
+        }
     }
 }

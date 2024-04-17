@@ -6,14 +6,14 @@ import { Locator, Page } from "@playwright/test";
 //A POM class to represent the account orders list page
 export default class AccountPagePOM
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declarations
     #ordersTable :Locator;
     #orders :Locator;
 
     constructor(page: Page) {
-        this.#page = page;
+        this.page = page;
 
         //Locators
         this.#ordersTable = page.getByRole('table');

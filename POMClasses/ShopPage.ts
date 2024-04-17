@@ -6,14 +6,14 @@ import { Locator, Page } from "@playwright/test";
 //A POM class for the shop page
 export default class ShopPagePOM
 {
-    #page :Page;
+    readonly page :Page;
 
     //Locator declarations
     #addToCartButtons :Locator;
     #numItemsInCart :Locator;
 
     constructor(page :Page) {
-        this.#page = page
+        this.page = page
 
         //Locators
         this.#addToCartButtons = page.getByLabel(/Add “.*” to your cart/);
@@ -27,7 +27,7 @@ export default class ShopPagePOM
 
     //Service methods
     public async AddToCart(item :string){
-        const btn = this.#page.getByLabel("Add “"+ item +"” to your cart");
+        const btn = this.page.getByLabel("Add “"+ item +"” to your cart");
 
         //Throw error if item is not on store page
         if (!await btn.isVisible()){
@@ -42,12 +42,17 @@ export default class ShopPagePOM
         await btn.click();
 
         //Wait for cart item to increment
+        let flag = false;
         let attempts = 10;
         for (let i=0; i<attempts; i++){
             if (await this.GetCartQuantity() >= count){
+                flag = true;
                 break;
             }
-            await this.#page.waitForTimeout(100);
+            await this.page.waitForTimeout(100);
+        }
+        if (!flag){
+            throw new Error("Timed out waiting for the cart quantity to increment after adding an item")
         }
     }
 }
