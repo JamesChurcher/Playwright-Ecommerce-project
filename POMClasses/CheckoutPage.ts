@@ -10,8 +10,6 @@ export default class CheckoutPage
 
     //Locator declarations
     #placeOrderButton :Locator;
-    #paymentCheck :Locator;
-    #paymentCash :Locator;
 
     #firstName :Locator;
     #lastName :Locator;
@@ -22,13 +20,14 @@ export default class CheckoutPage
     #phoneNumber :Locator;
     #paymentMethods;
 
+    //Attributes
+    #orderReceivedWait :Promise<any>;
+
     constructor(page :Page) {
         this.#page = page
 
         //Locators
         this.#placeOrderButton = page.getByRole('button', { name: 'Place order' });
-        this.#paymentCheck = page.getByText("Check payments");
-        this.#paymentCash = page.getByText("Cash on delivery");
         
         this.#firstName = page.locator('#billing_first_name');
         this.#lastName = page.locator('#billing_last_name');
@@ -42,6 +41,8 @@ export default class CheckoutPage
             "cheque": page.getByText('Check payments'),
             "cod": page.getByText('Cash on delivery'),
         }
+        
+        this.#orderReceivedWait = this.#page.waitForURL(/\/order-received\//);
     }
 
     //Service methods
@@ -99,5 +100,8 @@ export default class CheckoutPage
 
         //Checkout
         await this.PlaceOrder();
+
+        //Wait for order summary page
+        await this.#orderReceivedWait;
     }
 }

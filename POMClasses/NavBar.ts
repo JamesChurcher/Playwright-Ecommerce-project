@@ -14,14 +14,17 @@ export default class NavBarPOM
     #cartButton :Locator;
     #checkoutButton :Locator;
 
+    #popup :Locator;
+
     constructor(page :Page) {
         this.#page = page;
 
         //Locators
-        this.#shopButton = page.locator('#menu-main').getByRole('link', { name: 'Shop' })
-        this.#accountButton = page.locator('#menu-main').getByRole('link', { name: 'My account' })
-        this.#cartButton = page.locator('#menu-main').getByRole('link', { name: 'Cart' })
-        this.#checkoutButton = page.locator('#menu-main').getByRole('link', { name: 'Checkout' })
+        this.#shopButton = page.locator('#menu-main').getByRole('link', { name: 'Shop' });
+        this.#accountButton = page.locator('#menu-main').getByRole('link', { name: 'My account' });
+        this.#cartButton = page.locator('#menu-main').getByRole('link', { name: 'Cart' });
+        this.#checkoutButton = page.locator('#menu-main').getByRole('link', { name: 'Checkout' });
+        this.#popup = page.getByRole('link', { name: 'Dismiss' });
     }
 
     //Service methods
@@ -39,5 +42,12 @@ export default class NavBarPOM
 
     public async GoCheckout(){
         await this.#checkoutButton.click();
+    }
+
+    //Dismiss popup
+    public async DismissPopup(){
+        if (await this.#popup.isVisible()){
+            await this.#popup.click();
+        }
     }
 }
