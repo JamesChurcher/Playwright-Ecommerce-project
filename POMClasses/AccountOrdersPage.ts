@@ -2,20 +2,16 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 
 //A POM class to represent the account orders list page
-export default class AccountPagePOM
+export default class AccountPage extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declarations
-    #orders :Locator;
+    #orders :Locator = this.page.getByRole('link', { name: /#\d+/ });
 
     constructor(page: Page) {
-        this.page = page;
-
-        //Locators
-        this.#orders = page.getByRole('link', { name: /#\d+/ });
+        super(page);
     }
 
     //---Service methods---

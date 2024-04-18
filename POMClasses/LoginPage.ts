@@ -2,26 +2,19 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 
 //A POM class to represent the login page
-export default class LoginPagePOM
+export default class LoginPage extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declarations
-    #usernameField :Locator;
-    #passwordField :Locator;
-    #submitButton :Locator;
-    #logoutButton :Locator;
+    #usernameField: Locator = this.page.getByLabel("username");
+    #passwordField: Locator = this.page.locator('#password');
+    #submitButton: Locator = this.page.getByRole("button", { name : "Log in" });
+    #logoutButton: Locator = this.page.getByRole('link', { name: 'Logout' });
 
     constructor(page: Page) {
-        this.page = page;
-
-        //Locators
-        this.#usernameField = page.getByLabel("username");
-        this.#passwordField = page.locator('#password');
-        this.#submitButton = page.getByRole("button", { name : "Log in" });
-        this.#logoutButton = page.getByRole('link', { name: 'Logout' });
+        super(page);
     }
 
     //---Service methods---

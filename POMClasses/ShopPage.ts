@@ -2,20 +2,16 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 
 //A POM class for the shop page
-export default class ShopPagePOM
+export default class ShopPage extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declarations
-    #numItemsInCart :Locator;
+    #numItemsInCart = this.page.getByText(/\d+ items?/);
 
     constructor(page :Page) {
-        this.page = page
-
-        //Locators
-        this.#numItemsInCart = page.getByText(/\d+ items?/);
+        super(page)
     }
 
     //---Service methods---

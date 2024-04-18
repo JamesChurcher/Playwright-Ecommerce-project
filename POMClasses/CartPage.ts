@@ -2,41 +2,27 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 import { ToFloat } from "../utils/HelperMethods";
 
 //A POM class for the shop page
-export default class CartPagePOM
+export default class CartPage extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declaratons
-    #subtotal :Locator;
-    #shipping :Locator;
-    #coupon :Locator;
-    #total :Locator;
+    #total: Locator = this.page.locator(".order-total");
+    #shipping: Locator = this.page.locator("#shipping_method");
+    #coupon: Locator = this.page.locator(".cart-discount");
+    #subtotal: Locator = this.page.locator(".cart-subtotal")
 
-    #cartEmpty :Locator;
-    #removeFromCart :Locator;
+    #cartEmpty: Locator = this.page.locator(".cart-empty");
+    #removeFromCart: Locator = this.page.getByLabel('Remove this item');
 
-    #discountField :Locator
-    #discountSubmit :Locator;
-    #discountRemove :Locator;
+    #discountField: Locator = this.page.getByPlaceholder('Coupon code');
+    #discountSubmit: Locator = this.page.getByRole('button', { name: 'Apply coupon' });
+    #discountRemove: Locator = this.page.getByRole('link', { name: '[Remove]' });
 
     constructor(page :Page) {
-        this.page = page;
-
-        //Locators
-        this.#total = page.locator(".order-total");
-        this.#shipping = page.locator("#shipping_method");
-        this.#coupon = page.locator(".cart-discount");
-        this.#subtotal = page.locator(".cart-subtotal")
-
-        this.#cartEmpty = page.locator(".cart-empty");
-        this.#removeFromCart = page.getByLabel('Remove this item');
-
-        this.#discountField = page.getByPlaceholder('Coupon code');
-        this.#discountSubmit = page.getByRole('button', { name: 'Apply coupon' });
-        this.#discountRemove = page.getByRole('link', { name: '[Remove]' });
+        super(page);
     }
 
     //---Service methods---

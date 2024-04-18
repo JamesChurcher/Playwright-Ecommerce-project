@@ -2,42 +2,29 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 
 //A POM class for the checkout page
-export default class CheckoutPage
+export default class CheckoutPage extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declarations
-    #placeOrderButton :Locator;
+    #placeOrderButton: Locator = this.page.getByRole('button', { name: 'Place order' });
+    
+    #firstName: Locator = this.page.locator('#billing_first_name');
+    #lastName: Locator = this.page.locator('#billing_last_name');
+    #country: Locator = this.page.locator('#billing_country');
+    #street: Locator = this.page.locator('#billing_address_1');
+    #city: Locator = this.page.locator('#billing_city');
+    #postcode: Locator = this.page.locator('#billing_postcode');
+    #phoneNumber: Locator = this.page.getByLabel('Phone');
 
-    #firstName :Locator;
-    #lastName :Locator;
-    #country :Locator;
-    #street :Locator;
-    #city :Locator;
-    #postcode :Locator;
-    #phoneNumber :Locator;
-    #paymentMethods :Object;
+    #paymentMethods = {
+        "cheque": this.page.getByText('Check payments'),
+        "cod": this.page.getByText('Cash on delivery'),
+    }
 
     constructor(page :Page) {
-        this.page = page
-
-        //Locators
-        this.#placeOrderButton = page.getByRole('button', { name: 'Place order' });
-        
-        this.#firstName = page.locator('#billing_first_name');
-        this.#lastName = page.locator('#billing_last_name');
-        this.#country = page.locator('#billing_country');
-        this.#street = page.locator('#billing_address_1');
-        this.#city = page.locator('#billing_city');
-        this.#postcode = page.locator('#billing_postcode');
-        this.#phoneNumber = page.getByLabel('Phone');
-
-        this.#paymentMethods = {
-            "cheque": page.getByText('Check payments'),
-            "cod": page.getByText('Cash on delivery'),
-        }
+        super(page)
     }
 
     //---Service methods---

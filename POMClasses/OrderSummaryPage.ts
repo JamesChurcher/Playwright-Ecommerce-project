@@ -2,20 +2,16 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 
 //A POM class for the order summar page appearing after checkout
-export default class OrderSummaryPagePOM
+export default class OrderSummaryPage extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declarations
-    #orderNumber :Locator;
+    #orderNumber: Locator = this.page.getByText("Order number");
 
     constructor(page :Page) {
-        this.page = page
-
-        //Locators
-        this.#orderNumber = page.getByText("Order number");
+        super(page)
     }
 
     //---Service methods---

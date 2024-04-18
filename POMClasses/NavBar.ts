@@ -2,29 +2,20 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import BasePOM from "./BasePOM";
 
 //A POM class for the navbar
-export default class NavBarPOM
+export default class NavBar extends BasePOM
 {
-    readonly page :Page;
-
     //Locator declarations
-    #shopButton :Locator;
-    #accountButton :Locator;
-    #cartButton :Locator;
-    #checkoutButton :Locator;
-
-    #popup :Locator;
+    #shopButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Shop' });
+    #accountButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'My account' });
+    #cartButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Cart' });
+    #checkoutButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Checkout' });
+    #popup: Locator = this.page.getByRole('link', { name: 'Dismiss' });
 
     constructor(page :Page) {
-        this.page = page;
-
-        //Locators
-        this.#shopButton = page.locator('#menu-main').getByRole('link', { name: 'Shop' });
-        this.#accountButton = page.locator('#menu-main').getByRole('link', { name: 'My account' });
-        this.#cartButton = page.locator('#menu-main').getByRole('link', { name: 'Cart' });
-        this.#checkoutButton = page.locator('#menu-main').getByRole('link', { name: 'Checkout' });
-        this.#popup = page.getByRole('link', { name: 'Dismiss' });
+        super(page);
     }
 
     //---Service methods---
