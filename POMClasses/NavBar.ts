@@ -27,7 +27,7 @@ export default class NavBarPOM
         this.#popup = page.getByRole('link', { name: 'Dismiss' });
     }
 
-    //Service methods
+    //---Service methods---
     public async GoShop(){
         await this.#shopButton.click();
         await this.page.waitForURL(/shop/);

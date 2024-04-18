@@ -9,18 +9,18 @@ export default class AccountPagePOM
     readonly page :Page;
 
     //Locator declarations
-    #ordersTable :Locator;
     #orders :Locator;
 
     constructor(page: Page) {
         this.page = page;
 
         //Locators
-        this.#ordersTable = page.getByRole('table');
-        this.#orders = page.getByRole('link', { name: '#' });
+        this.#orders = page.getByRole('link', { name: /#\d+/ });
     }
 
-    //Service methods
+    //---Service methods---
+
+    //Get all order numbers listed under this account
     public async GetAccountOrders(){
         let orderNumbers :string[] = []
         for (let order of await this.#orders.all()){

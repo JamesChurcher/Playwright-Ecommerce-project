@@ -9,29 +9,28 @@ export default class ShopPagePOM
     readonly page :Page;
 
     //Locator declarations
-    #addToCartButtons :Locator;
     #numItemsInCart :Locator;
 
     constructor(page :Page) {
         this.page = page
 
         //Locators
-        this.#addToCartButtons = page.getByLabel(/Add “.*” to your cart/);
         this.#numItemsInCart = page.getByText(/\d+ items?/);
     }
 
+    //---Service methods---
     private async GetCartQuantity(){
         let quantity = (await this.#numItemsInCart.innerText()).replace(/\D/g, "");
         return Number(quantity);
     }
 
-    //Service methods
     public async AddToCart(item :string){
-        const btn = this.page.getByLabel("Add “"+ item +"” to your cart");
+        //Get add to cart button
+        const btn = this.page.getByLabel("Add “"+ item +"” to your cart");      //TODO move locator to top of page
 
         //Throw error if item is not on store page
         if (!await btn.isVisible()){
-            throw new Error(`Could not find product ${item} on the store page"`)
+            throw new Error(`Could not find product ${item} on the store page`)
         }
 
         //Quantity of cart before adding
@@ -52,7 +51,7 @@ export default class ShopPagePOM
             await this.page.waitForTimeout(100);
         }
         if (!flag){
-            throw new Error("Timed out waiting for the cart quantity to increment after adding an item")
+            throw new Error("Timed out waiting for the cart quantity to increment after adding an item")    //Throw error if cart quantity did not increment
         }
     }
 }

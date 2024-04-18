@@ -58,7 +58,7 @@ test.describe("my testcases", () => {
 		console.log("USER_NAME and PASSWORD have been set");
 
 		const loginPage = new LoginPagePOM(page);
-		await loginPage.Login(process.env.USER_NAME, process.env.PASSWORD);
+		await loginPage.LoginExpectSuccess(process.env.USER_NAME, process.env.PASSWORD);
 		console.log("Login successful");
 
 		console.log("-----Setup Complete-----\n");
@@ -80,7 +80,7 @@ test.describe("my testcases", () => {
 		await navbar.GoAccount();		//Go to account page
 
 		const accountPage = new AccountPagePOM(page);
-		await accountPage.Logout();
+		await accountPage.LogoutExpectSuccess();
 		console.log("Logout successful")
 
 		console.log("-----Teardown Complete-----");

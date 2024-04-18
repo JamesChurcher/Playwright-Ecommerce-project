@@ -14,9 +14,6 @@ export default class LoginPagePOM
     #submitButton :Locator;
     #logoutButton :Locator;
 
-    //Wait declarations
-    // #loggedInWait :Promise<void>;
-
     constructor(page: Page) {
         this.page = page;
 
@@ -25,12 +22,9 @@ export default class LoginPagePOM
         this.#passwordField = page.locator('#password');
         this.#submitButton = page.getByRole("button", { name : "Log in" });
         this.#logoutButton = page.getByRole('link', { name: 'Logout' });
-
-        //Waits
-        // this.#loggedInWait = page.getByRole('link', { name: 'Logout' }).waitFor({state: 'visible', timeout: 4000});
     }
 
-    //Service methods
+    //---Service methods---
     public async SetUsername(username :string){
         await this.#usernameField.click();
         await this.#usernameField.fill(username);
@@ -45,17 +39,19 @@ export default class LoginPagePOM
         await this.#submitButton.click();
     }
 
-    //High-level service methods
-    public async Login(username :string, password :string){
+    //---High-level service methods---
+
+    //Log into an account successfully
+    public async LoginExpectSuccess(username :string, password :string){
         await this.SetUsername(username);
         await this.SetPassword(password);
         await this.SubmitLogin();
         
         try {
-            await this.#logoutButton.waitFor({state: 'visible', timeout: 4000});
+            await this.#logoutButton.waitFor({state: 'visible', timeout: 4000});        //Wait for logout link to show
         }
         catch (error){
-            error.message = "Could not login\n" + error.message;
+            error.message = "Could not login\n" + error.message;        //Throw an error if we could not login properly
             throw error;
         }
     }

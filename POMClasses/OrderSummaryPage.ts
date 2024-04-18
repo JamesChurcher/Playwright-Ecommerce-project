@@ -18,7 +18,7 @@ export default class OrderSummaryPagePOM
         this.#orderNumber = page.getByText("Order number");
     }
 
-    //Service methods
+    //---Service methods---
     public async GetOrderNumber(){
         return (await this.#orderNumber.innerText()).replace(/\D/g, "");
     }

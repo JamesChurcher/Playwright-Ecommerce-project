@@ -2,6 +2,7 @@
 // 03/04/24
 
 import { Locator, Page } from "@playwright/test";
+import { ToFloat } from "../utils/HelperMethods";
 
 //A POM class for the shop page
 export default class CartPagePOM
@@ -21,10 +22,6 @@ export default class CartPagePOM
     #discountSubmit :Locator;
     #discountRemove :Locator;
 
-    //Wait declarations
-    // #appliedDiscountWait :Promise<void>;
-    // #removedDiscountWait :Promise<void>;
-
     constructor(page :Page) {
         this.page = page;
 
@@ -40,40 +37,35 @@ export default class CartPagePOM
         this.#discountField = page.getByPlaceholder('Coupon code');
         this.#discountSubmit = page.getByRole('button', { name: 'Apply coupon' });
         this.#discountRemove = page.getByRole('link', { name: '[Remove]' });
-
-        //Waits
-        // this.#appliedDiscountWait = this.#coupon.waitFor({ state: "visible", timeout: 4000 });
-        // this.#removedDiscountWait = this.#coupon.waitFor({ state: "hidden", timeout: 4000 });
     }
 
-    //Service methods
-    private ToFloat(text :string){
-        return parseFloat(text.replace(/[^\d\.]/g, ""));
-    }
-
+    //---Service methods---
     public async GetTotal(){
         let text = await this.#total.innerText();
-        return this.ToFloat(text);
+        return ToFloat(text);
     }
 
     public async GetShipping(){
         let text = await this.#shipping.innerText();
-        return this.ToFloat(text);
+        return ToFloat(text);
     }
 
     public async GetCoupon(){
         let text = await this.#coupon.innerText();
-        return this.ToFloat(text);
+        return ToFloat(text);
     }
 
     public async GetSubtotal(){
         let text = await this.#subtotal.innerText();
-        return this.ToFloat(text);
+        return ToFloat(text);
     }
 
+    //Check if the cart is empty
     public async IsEmpty(){
         return await this.#cartEmpty.isVisible();
     }
+
+    //---High-level service methods---
 
     //Fill in and submit the given coupon
     public async ApplyDiscount(coupon :string){
@@ -84,8 +76,8 @@ export default class CartPagePOM
             await this.#coupon.waitFor({ state: "visible", timeout: 4000 });    //Wait for coupon to be applied
         }
         catch (error){
-            error.message = "Could not apply coupon code / coupon code not accepted\n" + error.message;
-            throw error;    
+            error.message = "Could not apply coupon code / coupon code not accepted\n" + error.message;     //Throw error if we could not apply coupon
+            throw error;
         }
     }
 
@@ -99,8 +91,8 @@ export default class CartPagePOM
             await this.#coupon.waitFor({ state: "hidden", timeout: 4000 });    //Wait for coupon to be removed
         }
         catch (error){
-            error.message = "Could not remove coupon code\n" + error.message;
-            throw error;    
+            error.message = "Could not remove coupon code\n" + error.message;       //Throw error if we could not remove coupon
+            throw error;
         }
     }
 
@@ -122,7 +114,7 @@ export default class CartPagePOM
 
             //Wait for number of items in cart to decrement
             let flag = false;
-            let attempts = 15;
+            const attempts = 15;
             for (let i=0; i<attempts; i++){
                 if (await this.#removeFromCart.count() <= count){
                     flag = true;
@@ -131,7 +123,7 @@ export default class CartPagePOM
                 await this.page.waitForTimeout(100);
             }
             if (!flag){
-                throw new Error("Timed out waiting for the cart quantity to decrement after removing an item")
+                throw new Error("Timed out waiting for the cart quantity to decrement after removing an item")  //Item still not removed after X attempts
             }
         }
     }

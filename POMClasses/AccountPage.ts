@@ -12,9 +12,7 @@ export default class AccountPagePOM
     #navBar :Locator;
     #ordersButton :Locator;
     #logoutButton :Locator;
-
-    //Wait declarations
-    // #loggedOutWait :Promise<void>;
+    #loginButton :Locator;
 
     constructor(page: Page) {
         this.page = page;
@@ -23,25 +21,26 @@ export default class AccountPagePOM
         this.#navBar = page.locator(".entry-content").getByRole('list');
         this.#ordersButton = this.#navBar.getByText("Orders");
         this.#logoutButton = this.#navBar.getByText("Logout");
-
-        //Waits
-        // this.#loggedOutWait = page.getByRole('button', { name: 'Log in' }).waitFor({state: 'visible', timeout: 4000});
+        this.#loginButton = this.page.getByRole('button', { name: 'Log in' });
     }
 
-    //Service methods
+    //---Service methods---
     public async GoAccountOrders(){
         await this.#ordersButton.click();
     }
 
-    public async Logout(){
+    //---High-level service methods---
+
+    //Log out of the account successfully
+    public async LogoutExpectSuccess(){
         await this.#logoutButton.click();
         
+        //Wait for logout
         try {
-            // await this.#loggedOutWait;
-            await this.page.getByRole('button', { name: 'Log in' }).waitFor({state: 'visible', timeout: 4000});
+            await this.#loginButton.waitFor({state: 'visible', timeout: 4000});     //Wait for the login button to show
         }
         catch (error){
-            error.message = "Could not logout\n" + error.message;
+            error.message = "Could not logout\n" + error.message;       //Throw an error if we could not logout properly
             throw error;    
         }
     }

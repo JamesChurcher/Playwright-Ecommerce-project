@@ -20,9 +20,6 @@ export default class CheckoutPage
     #phoneNumber :Locator;
     #paymentMethods :Object;
 
-    //Wait declarations
-    // #orderReceivedWait :Promise<any>;
-
     constructor(page :Page) {
         this.page = page
 
@@ -41,12 +38,9 @@ export default class CheckoutPage
             "cheque": page.getByText('Check payments'),
             "cod": page.getByText('Cash on delivery'),
         }
-        
-        //Waits
-        // this.#orderReceivedWait = this.#page.waitForURL(/\/order-received\//, {timeout: 4000});
     }
 
-    //Service methods
+    //---Service methods---
     public async PlaceOrder(){
         await this.#placeOrderButton.click();
     }
@@ -83,7 +77,7 @@ export default class CheckoutPage
         await this.#paymentMethods[paymentMethod].click();
     }
 
-    //Higher level service methods
+    //---Higher level service methods---
     public async CheckoutExpectSuccess(billingDetails){
         //Set text fields
         await this.SetFirstName(billingDetails.firstName);
@@ -107,7 +101,7 @@ export default class CheckoutPage
             await this.page.waitForURL(/order-received/, {timeout: 4000});
         }
         catch (error){
-            error.message = "Could not place order, we are not currently on the order summary page\n" + error.message;
+            error.message = "Could not place order, we are not currently on the order summary page\n" + error.message;      //Throw error if we are not on the correct page
             throw error;
         }
     }
