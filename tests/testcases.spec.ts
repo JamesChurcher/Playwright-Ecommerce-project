@@ -1,18 +1,6 @@
 import { test, expect } from '../fixtures/fixtures';
 import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
-
-import {
-	LoginPage,
-	ShopPage,
-	NavBar,
-	CartPage,
-	CheckoutPage,
-	OrderSummaryPage,
-	AccountPage,
-	AccountOrdersPage,
-} from '../POMClasses/POMClasses'
-
-import data from '../testData/testData.json';
+import { NavBar } from '../POMClasses/POMClasses'
 
 test.describe("my testcases", () => {
 	test("Login and apply discount", async ({ page, navigateAndLogin, testProducts, testDiscount }, testInfo) => {

@@ -1,19 +1,24 @@
 //James Churcher
 //17/04/24
 
-// const base = require("@playwright/test");
-// const { LoginPagePOM } = require("../POMClasses/LoginPage");
-
 import { test as base } from '@playwright/test';
-import LoginPagePOM from "../POMClasses/LoginPage";
-import NavBarPOM from '../POMClasses/NavBar';
-import CartPagePOM from '../POMClasses/CartPage';
-import AccountPagePOM from '../POMClasses/AccountPage';
+
+import NavBar from '../POMClasses/NavBar';
+import {
+	ProductData,
+	DiscountData,
+	BillingDetailsData
+} from '../models/ModelClasses'
 
 import data from '../testData/testData.json';
-import NavBar from '../POMClasses/NavBar';
 
-export const test = base.extend({
+export const test = base.extend<{ 
+	navigateAndLogin: NavBar, 
+	testProducts: ProductData[], 
+	testDiscount: DiscountData, 
+	testBillingDetails: BillingDetailsData}>
+	({
+	//Navigates and logs into an account, returns a navbar POM instance
     navigateAndLogin: async ({ page }, use) => {
         //---Setup---
         // Get url
@@ -61,21 +66,24 @@ export const test = base.extend({
 		console.log("Logout successful")
     },
 
+	//Returns a list of products
     testProducts: async ({}, use) => {
         process.env.DATAINDEX ??= '0';
-        let testData = data[process.env.DATAINDEX].products;
+        let testData: ProductData[] = data[process.env.DATAINDEX].products;
         use(testData);
     },
 
+	//Returns a discount code
     testDiscount: async ({}, use) => {
         process.env.DATAINDEX ??= '0';
-        let testData = data[process.env.DATAINDEX].discount;
+        let testData: DiscountData = data[process.env.DATAINDEX].discount;
         use(testData);
     },
 
+	//Returns an object containing billings information
     testBillingDetails: async ({}, use) => {
         process.env.DATAINDEX ??= '0';
-        let testData = data[process.env.DATAINDEX].billingDetails;
+        let testData: BillingDetailsData = data[process.env.DATAINDEX].billingDetails;
         use(testData);
     },
 });
