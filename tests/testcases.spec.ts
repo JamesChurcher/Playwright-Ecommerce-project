@@ -22,7 +22,7 @@ test.describe("my testcases", () => {
 	test.beforeEach("Setup => Login", async ({ page }) => {
 		console.log("-----Setup-----");
 		
-		//Set up test data
+		// Check if data index has been set -> Defines what data set to use from the test data
 		if (!process.env.DATAINDEX) {
 			process.env.DATAINDEX = '0';
 			console.log("No test data index set, using default 0");
@@ -33,32 +33,40 @@ test.describe("my testcases", () => {
 
 		let testData = data[process.env.DATAINDEX]
 
+		// Pass through to variables used during the tests
 		testProducts = testData.products;
 		testDiscount = testData.discount;
 		testBillingDetails = testData.billingDetails;
 		console.log("Test data set up successfully")
 
-		//Navigate to site
-		if (!process.env.URL) {
+		// Get url
+		const webURL = process.env.URL
+
+		// Check if environment has set website url
+		if (!webURL) {
 			throw new Error("URL is undefined");
 		}
-		console.log("URL " + process.env.URL);
+		console.log("URL " + webURL);
 
-		await page.goto(process.env.URL);		//Navigate
+		// Go to website url
+		await page.goto(webURL);		//Navigate
 
 		const navbar = new NavBar(page);
 		await navbar.DismissPopup();		//Dismiss popup
 
-		//Login
-		await navbar.GoAccount();		//Go to account page
+		// Get username and password
+		const username = process.env.USER_NAME;
+		const password = process.env.PASSWORD;
 
-		if (!process.env.USER_NAME || !process.env.PASSWORD) {
+		// Check if environment has set username and password
+		if (!username || !password) {
 			throw new Error("USER_NAME or PASSWORD are undefined");
 		}
 		console.log("USER_NAME and PASSWORD have been set");
 
-		const loginPage = new LoginPage(page);
-		await loginPage.LoginExpectSuccess(process.env.USER_NAME, process.env.PASSWORD);
+		// Login
+		const loginPage = await navbar.GoLogin();		//Go to login page
+		await loginPage.LoginExpectSuccess(username, password);
 		console.log("Login successful");
 
 		console.log("-----Setup Complete-----\n");
@@ -70,16 +78,12 @@ test.describe("my testcases", () => {
 		const navbar = new NavBar(page);
 
 		//Empty cart
-		await navbar.GoCart();		//Go to cart page
-
-		const cartPage = new CartPage(page);
+		const cartPage = await navbar.GoCart();		//Go to cart page
 		await cartPage.MakeCartEmpty();
 		console.log("Emptied cart successfully")
 
 		//Logout
-		await navbar.GoAccount();		//Go to account page
-
-		const accountPage = new AccountPage(page);
+		const accountPage = await navbar.GoAccount();		//Go to account page
 		await accountPage.LogoutExpectSuccess();
 		console.log("Logout successful")
 
@@ -89,10 +93,9 @@ test.describe("my testcases", () => {
 	test("Login and apply discount", async ({ page }, testInfo) => {
 		//Shop
 		const navbar = new NavBar(page);
-		await navbar.GoShop();		//Go to shop page
+		const shopPage = await navbar.GoShop();		//Go to shop page
 
 		console.log("Add items to cart")
-		const shopPage = new ShopPage(page);
 		for (let i = 0; i < testProducts.length; i++) {
 			let item = testProducts[i].product;
 			await shopPage.AddToCart(item);
@@ -100,9 +103,7 @@ test.describe("my testcases", () => {
 		}
 
 		//Cart
-		await navbar.GoCart();
-		const cartPage = new CartPage(page);
-
+		const cartPage = await navbar.GoCart();
 		await cartPage.ApplyDiscount(testDiscount.code);		//Apply discount code
 		console.log(`Applied discount code \"${testDiscount.code}\" successfully`);
 
@@ -132,10 +133,9 @@ test.describe("my testcases", () => {
 	test("Login and checkout with a cheque", async ({ page }, testInfo) => {
 		//Shop
 		const navbar = new NavBar(page);
-		await navbar.GoShop();		//Go to shop page
+		const shopPage = await navbar.GoShop();		//Go to shop page
 
 		console.log("Add items to cart")
-		const shopPage = new ShopPage(page);
 		for (let i = 0; i < testProducts.length; i++) {
 			let item = testProducts[i].product;
 			await shopPage.AddToCart(item);
@@ -143,26 +143,23 @@ test.describe("my testcases", () => {
 		}
 
 		//Checkout
-		await navbar.GoCheckout();
-		const checkoutPage = new CheckoutPage(page);
-		await checkoutPage.CheckoutExpectSuccess(testBillingDetails);
+		const checkoutPage = await navbar.GoCheckout();
+		const orderSummaryPage = await checkoutPage.CheckoutExpectSuccess(testBillingDetails);
+
 		console.table(testBillingDetails);
 		console.log("Checkout successful")
 
 		await TakeAndAttachScreenshot(page, testInfo, "Test2_1", "Order summary after checkout");		//Take Screenshot
 
 		//Get the order number
-		const orderSummaryPage = new OrderSummaryPage(page);
 		let orderNumber = await orderSummaryPage.GetOrderNumber();
 		console.log("Order number is " + orderNumber);
 
 		//Account orders
-		await navbar.GoAccount();
-		const accountPage = new AccountPage(page);
-		await accountPage.GoAccountOrders();
+		const accountPage = await navbar.GoAccount();
+		const accountOrdersPage = await accountPage.GoAccountOrders();
 
 		//Check if the order number is on the page
-		const accountOrdersPage = new AccountOrdersPage(page);
 		let allOrderNums = await accountOrdersPage.GetAccountOrders();
 		console.log("All order numbers listed: " + allOrderNums);
 

@@ -4,6 +4,8 @@
 import { Locator, Page } from "@playwright/test";
 import BasePOM from "./BasePOM";
 
+import { AccountPage } from "./POMClasses";
+
 //A POM class to represent the login page
 export default class LoginPage extends BasePOM
 {
@@ -47,5 +49,7 @@ export default class LoginPage extends BasePOM
             error.message = "Could not login\n" + error.message;        //Throw an error if we could not login properly
             throw error;
         }
+        
+        return new AccountPage(this.page);
     }
 }

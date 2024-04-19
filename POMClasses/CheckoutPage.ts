@@ -4,6 +4,8 @@
 import { Locator, Page } from "@playwright/test";
 import BasePOM from "./BasePOM";
 
+import { OrderSummaryPage } from "./POMClasses";
+
 //A POM class for the checkout page
 export default class CheckoutPage extends BasePOM
 {
@@ -91,5 +93,7 @@ export default class CheckoutPage extends BasePOM
             error.message = "Could not place order, we are not currently on the order summary page\n" + error.message;      //Throw error if we are not on the correct page
             throw error;
         }
+        
+        return new OrderSummaryPage(this.page);
     }
 }

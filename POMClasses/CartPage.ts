@@ -106,7 +106,7 @@ export default class CartPage extends BasePOM
                     flag = true;
                     break;
                 }
-                await this.page.waitForTimeout(100);
+                await this.page.waitForTimeout(150);
             }
             if (!flag){
                 throw new Error("Timed out waiting for the cart quantity to decrement after removing an item")  //Item still not removed after X attempts

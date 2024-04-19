@@ -4,6 +4,8 @@
 import { Locator, Page } from "@playwright/test";
 import BasePOM from "./BasePOM";
 
+import { ShopPage, AccountPage, CartPage, CheckoutPage, LoginPage } from "./POMClasses";
+
 //A POM class for the navbar
 export default class NavBar extends BasePOM
 {
@@ -22,21 +24,36 @@ export default class NavBar extends BasePOM
     public async GoShop(){
         await this.#shopButton.click();
         await this.page.waitForURL(/shop/);
+
+        return new ShopPage(this.page);
     }
 
     public async GoAccount(){
         await this.#accountButton.click();
         await this.page.waitForURL(/account/);
+
+        return new AccountPage(this.page);
+    }
+    
+    public async GoLogin(){
+        await this.#accountButton.click();
+        await this.page.waitForURL(/account/);
+
+        return new LoginPage(this.page);
     }
 
     public async GoCart(){
         await this.#cartButton.click();
         await this.page.waitForURL(/cart/);
+
+        return new CartPage(this.page);
     }
 
     public async GoCheckout(){
         await this.#checkoutButton.click();
         await this.page.waitForURL(/checkout/);
+        
+        return new CheckoutPage(this.page);
     }
 
     //Dismiss popup

@@ -38,13 +38,13 @@ export default class ShopPage extends BasePOM
 
         //Wait for cart item to increment
         let flag = false;
-        let attempts = 10;
+        let attempts = 15;
         for (let i=0; i<attempts; i++){
             if (await this.GetCartQuantity() >= count){
                 flag = true;
                 break;
             }
-            await this.page.waitForTimeout(100);
+            await this.page.waitForTimeout(150);
         }
         if (!flag){
             throw new Error("Timed out waiting for the cart quantity to increment after adding an item")    //Throw error if cart quantity did not increment
