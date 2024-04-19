@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/fixtures';
 import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
 
 import {
@@ -15,84 +15,9 @@ import {
 import data from '../testData/testData.json';
 
 test.describe("my testcases", () => {
-	let testProducts :Array<any>;
-	let testDiscount :any;
-	let testBillingDetails :any;
-
-	test.beforeEach("Setup => Login", async ({ page }) => {
-		console.log("-----Setup-----");
-		
-		// Check if data index has been set -> Defines what data set to use from the test data
-		if (!process.env.DATAINDEX) {
-			process.env.DATAINDEX = '0';
-			console.log("No test data index set, using default 0");
-		}
-		else{
-			console.log("Test data index is " + process.env.DATAINDEX);
-		}
-
-		let testData = data[process.env.DATAINDEX]
-
-		// Pass through to variables used during the tests
-		testProducts = testData.products;
-		testDiscount = testData.discount;
-		testBillingDetails = testData.billingDetails;
-		console.log("Test data set up successfully")
-
-		// Get url
-		const webURL = process.env.URL
-
-		// Check if environment has set website url
-		if (!webURL) {
-			throw new Error("URL is undefined");
-		}
-		console.log("URL " + webURL);
-
-		// Go to website url
-		await page.goto(webURL);		//Navigate
-
-		const navbar = new NavBar(page);
-		await navbar.DismissPopup();		//Dismiss popup
-
-		// Get username and password
-		const username = process.env.USER_NAME;
-		const password = process.env.PASSWORD;
-
-		// Check if environment has set username and password
-		if (!username || !password) {
-			throw new Error("USER_NAME or PASSWORD are undefined");
-		}
-		console.log("USER_NAME and PASSWORD have been set");
-
-		// Login
-		const loginPage = await navbar.GoLogin();		//Go to login page
-		await loginPage.LoginExpectSuccess(username, password);
-		console.log("Login successful");
-
-		console.log("-----Setup Complete-----\n");
-	})
-
-	test.afterEach("Teardown => Empty cart and Logout", async ({ page }) => {
-		console.log("\n-----Teardown-----");
-
-		const navbar = new NavBar(page);
-
-		//Empty cart
-		const cartPage = await navbar.GoCart();		//Go to cart page
-		await cartPage.MakeCartEmpty();
-		console.log("Emptied cart successfully")
-
-		//Logout
-		const accountPage = await navbar.GoAccount();		//Go to account page
-		await accountPage.LogoutExpectSuccess();
-		console.log("Logout successful")
-
-		console.log("-----Teardown Complete-----");
-	})
-
-	test("Login and apply discount", async ({ page }, testInfo) => {
+	test("Login and apply discount", async ({ page, navigateAndLogin, testProducts, testDiscount }, testInfo) => {
 		//Shop
-		const navbar = new NavBar(page);
+		const navbar: NavBar = navigateAndLogin;
 		const shopPage = await navbar.GoShop();		//Go to shop page
 
 		console.log("Add items to cart")
@@ -130,9 +55,9 @@ test.describe("my testcases", () => {
 		await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
 	})
 
-	test("Login and checkout with a cheque", async ({ page }, testInfo) => {
+	test("Login and checkout with a cheque", async ({ page, navigateAndLogin, testProducts, testBillingDetails }, testInfo) => {
 		//Shop
-		const navbar = new NavBar(page);
+		const navbar: NavBar = navigateAndLogin;
 		const shopPage = await navbar.GoShop();		//Go to shop page
 
 		console.log("Add items to cart")
