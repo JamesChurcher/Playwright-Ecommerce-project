@@ -1,0 +1,22 @@
+[
+    {
+        "firstName": "Jeff",
+        "lastName": "Bezos",
+        "country": "United Kingdom (UK)",
+        "street": "Amazon lane",
+        "city": "New York",
+        "postcode": "W1J 7NT",
+        "phoneNumber": "07946 123400",
+        "paymentMethod": "cheque"
+    },
+    {
+        "firstName": "Tim",
+        "lastName": "Cook",
+        "country": "France",
+        "street": "Apple road",
+        "city": "Cupertino",
+        "postcode": "95014",
+        "phoneNumber": "0800 048 0408",
+        "paymentMethod": "cod"
+    }
+]

@@ -10,28 +10,25 @@ import {
 	BillingDetailsData
 } from '../models/ModelClasses'
 
-import data from '../testData/testData.json';
+// import data from '../testData/testData.json';
 
-export const test = base.extend<{ 
+import productData from '../testData/products.json';
+import discountData from '../testData/discounts.json';
+import billingDetailsData from '../testData/billingDetails.json';
+
+type TestFixtures = { 
 	navigateAndLogin: NavBar, 
 	testProducts: ProductData[], 
 	testDiscount: DiscountData, 
-	testBillingDetails: BillingDetailsData}>
-	({
+	testBillingDetails: BillingDetailsData
+};
+
+export const test = base.extend<TestFixtures>({
 	//Navigates and logs into an account, returns a navbar POM instance
     navigateAndLogin: async ({ page }, use) => {
         //---Setup---
-        // Get url
-		const webURL = process.env.URL
-
-		// Check if environment has set website url
-		if (!webURL) {
-			throw new Error("URL is undefined");
-		}
-		console.log("URL " + webURL);
-
 		// Go to website url
-		await page.goto(webURL);		//Navigate
+		await page.goto('');		//Navigate
 
 		const navbar = new NavBar(page);
 		await navbar.DismissPopup();		//Dismiss popup
@@ -68,22 +65,21 @@ export const test = base.extend<{
 
 	//Returns a list of products
     testProducts: async ({}, use) => {
-        process.env.DATAINDEX ??= '0';
-        let testData: ProductData[] = data[process.env.DATAINDEX].products;
+        let testData: ProductData[] = productData;
         use(testData);
     },
 
 	//Returns a discount code
     testDiscount: async ({}, use) => {
         process.env.DATAINDEX ??= '0';
-        let testData: DiscountData = data[process.env.DATAINDEX].discount;
+        let testData: DiscountData = discountData[process.env.DATAINDEX];
         use(testData);
     },
 
 	//Returns an object containing billings information
     testBillingDetails: async ({}, use) => {
         process.env.DATAINDEX ??= '0';
-        let testData: BillingDetailsData = data[process.env.DATAINDEX].billingDetails;
+        let testData: BillingDetailsData = billingDetailsData[process.env.DATAINDEX];
         use(testData);
     },
 });

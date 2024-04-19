@@ -1,47 +1,51 @@
 import { test, expect } from '../fixtures/fixtures';
 import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
 import { NavBar } from '../POMClasses/POMClasses'
+import { discountsData } from '../models/Discount';
 
 test.describe("my testcases", () => {
-	test("Login and apply discount", async ({ page, navigateAndLogin, testProducts, testDiscount }, testInfo) => {
-		//Shop
-		const navbar: NavBar = navigateAndLogin;
-		const shopPage = await navbar.GoShop();		//Go to shop page
 
-		console.log("Add items to cart")
-		for (let i = 0; i < testProducts.length; i++) {
-			let item = testProducts[i].product;
-			await shopPage.AddToCart(item);
-			console.log(`Added \"${item}\" to the cart`)
-		}
+	for (const testDiscount of discountsData) {
+		test(`Login and apply discount ${testDiscount.code}`, async ({ page, navigateAndLogin, testProducts }, testInfo) => {
+			//Shop
+			const navbar: NavBar = navigateAndLogin;
+			const shopPage = await navbar.GoShop();		//Go to shop page
 
-		//Cart
-		const cartPage = await navbar.GoCart();
-		await cartPage.ApplyDiscount(testDiscount.code);		//Apply discount code
-		console.log(`Applied discount code \"${testDiscount.code}\" successfully`);
+			console.log("Add items to cart")
+			for (let i = 0; i < testProducts.length; i++) {
+				let item = testProducts[i].product;
+				await shopPage.AddToCart(item);
+				console.log(`Added \"${item}\" to the cart`)
+			}
 
-		let total = await cartPage.GetTotal();
-		let subtotal = await cartPage.GetSubtotal();
-		let shipping = await cartPage.GetShipping();
-		let discount = await cartPage.GetCoupon();
+			//Cart
+			const cartPage = await navbar.GoCart();
+			await cartPage.ApplyDiscount(testDiscount.code);		//Apply discount code
+			console.log(`Applied discount code \"${testDiscount.code}\" successfully`);
 
-		console.log(`Total: £${total}\nSubTotal: £${subtotal}\nShipping: £${shipping}\nDiscount: £${discount}`)
+			let total = await cartPage.GetTotal();
+			let subtotal = await cartPage.GetSubtotal();
+			let shipping = await cartPage.GetShipping();
+			let discount = await cartPage.GetCoupon();
 
-		let actualDiscount = (discount / subtotal * 100).toFixed(2)
-		let expectedTotal = (subtotal + shipping - discount).toFixed(2)
+			console.log(`Total: £${total}\nSubTotal: £${subtotal}\nShipping: £${shipping}\nDiscount: £${discount}`)
 
-		expect(actualDiscount, "Incorrect discount applied").toEqual((testDiscount.value).toFixed(2))	//Assert the amount deducted from discount
-		expect(total.toFixed(2), "Incorrect final total").toEqual(expectedTotal);						//Assert the price is correct
+			let actualDiscount = (discount / subtotal * 100).toFixed(2)
+			let expectedTotal = (subtotal + shipping - discount).toFixed(2)
 
-		//Reporting
-		console.log("\u001b[1;32m Test Pass\x1b[0m")
-		console.table({
-			"Discount":{"Expected": (testDiscount.value).toFixed(2)+"%","Actual": actualDiscount+"%"},
-			"Total":{"Expected": "£"+expectedTotal,"Actual": "£"+total.toFixed(2)}
+			expect(actualDiscount, "Incorrect discount applied").toEqual((testDiscount.value).toFixed(2))	//Assert the amount deducted from discount
+			expect(total.toFixed(2), "Incorrect final total").toEqual(expectedTotal);						//Assert the price is correct
+
+			//Reporting
+			console.log("\u001b[1;32m Test Pass\x1b[0m")
+			console.table({
+				"Discount":{"Expected": (testDiscount.value).toFixed(2)+"%","Actual": actualDiscount+"%"},
+				"Total":{"Expected": "£"+expectedTotal,"Actual": "£"+total.toFixed(2)}
+			})
+
+			await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
 		})
-
-		await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
-	})
+	}
 
 	test("Login and checkout with a cheque", async ({ page, navigateAndLogin, testProducts, testBillingDetails }, testInfo) => {
 		//Shop
