@@ -8,7 +8,7 @@ import {
 	ProductData,
 	DiscountData,
 	BillingDetailsData
-} from '../models/ModelClasses'
+} from '../models/Models'
 
 // import data from '../testData/testData.json';
 
@@ -61,26 +61,6 @@ export const test = base.extend<TestFixtures>({
 		const accountPage = await navbar.GoAccount();		//Go to account page
 		await accountPage.LogoutExpectSuccess();
 		console.log("Logout successful")
-    },
-
-	//Returns a list of products
-    testProducts: async ({}, use) => {
-        let testData: ProductData[] = productData;
-        use(testData);
-    },
-
-	//Returns a discount code
-    testDiscount: async ({}, use) => {
-        process.env.DATAINDEX ??= '0';
-        let testData: DiscountData = discountData[process.env.DATAINDEX];
-        use(testData);
-    },
-
-	//Returns an object containing billings information
-    testBillingDetails: async ({}, use) => {
-        process.env.DATAINDEX ??= '0';
-        let testData: BillingDetailsData = billingDetailsData[process.env.DATAINDEX];
-        use(testData);
     },
 });
 

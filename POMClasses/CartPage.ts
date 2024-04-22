@@ -88,28 +88,16 @@ export default class CartPage extends BasePOM
         await this.RemoveDiscount();
 
         //Remove items
-		while (await this.#removeFromCart.count() > 0){
-            //Quantity of cart before decrementing
-            let count = await this.#removeFromCart.count();
-            count--;
-
-			let element = this.#removeFromCart.first();     //First item in cart
+		while (!await this.IsEmpty()){
+            //First item in cart
+			let element = this.#removeFromCart.first();
 
             //Click to remove first item from the cart
-            await element.click();
-
-            //Wait for number of items in cart to decrement
-            let flag = false;
-            const attempts = 15;
-            for (let i=0; i<attempts; i++){
-                if (await this.#removeFromCart.count() <= count){
-                    flag = true;
-                    break;
-                }
-                await this.page.waitForTimeout(150);
+            try {
+                await element.click({timeout: 1000});
             }
-            if (!flag){
-                throw new Error("Timed out waiting for the cart quantity to decrement after removing an item")  //Item still not removed after X attempts
+            catch {
+                //Do nothing
             }
         }
     }

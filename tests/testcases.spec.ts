@@ -1,19 +1,23 @@
 import { test, expect } from '../fixtures/fixtures';
 import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
 import { NavBar } from '../POMClasses/POMClasses'
+
 import { discountsData } from '../models/Discount';
+import { productsData } from '../models/Product';
+import { billingDetailsData as bdData } from '../models/BillingDetails';
+const billingDetailsData = bdData[0];
 
 test.describe("my testcases", () => {
 
 	for (const testDiscount of discountsData) {
-		test(`Login and apply discount ${testDiscount.code}`, async ({ page, navigateAndLogin, testProducts }, testInfo) => {
+		test(`Login and apply discount ${testDiscount.code}`, async ({ page, navigateAndLogin }, testInfo) => {
 			//Shop
 			const navbar: NavBar = navigateAndLogin;
 			const shopPage = await navbar.GoShop();		//Go to shop page
 
 			console.log("Add items to cart")
-			for (let i = 0; i < testProducts.length; i++) {
-				let item = testProducts[i].product;
+			for (let i = 0; i < productsData.length; i++) {
+				let item = productsData[i].product;
 				await shopPage.AddToCart(item);
 				console.log(`Added \"${item}\" to the cart`)
 			}
@@ -47,23 +51,23 @@ test.describe("my testcases", () => {
 		})
 	}
 
-	test("Login and checkout with a cheque", async ({ page, navigateAndLogin, testProducts, testBillingDetails }, testInfo) => {
+	test("Login and checkout with a cheque", async ({ page, navigateAndLogin }, testInfo) => {
 		//Shop
 		const navbar: NavBar = navigateAndLogin;
 		const shopPage = await navbar.GoShop();		//Go to shop page
 
 		console.log("Add items to cart")
-		for (let i = 0; i < testProducts.length; i++) {
-			let item = testProducts[i].product;
+		for (let i = 0; i < productsData.length; i++) {
+			let item = productsData[i].product;
 			await shopPage.AddToCart(item);
 			console.log(`Added \"${item}\" to the cart`)
 		}
 
 		//Checkout
 		const checkoutPage = await navbar.GoCheckout();
-		const orderSummaryPage = await checkoutPage.CheckoutExpectSuccess(testBillingDetails);
+		const orderSummaryPage = await checkoutPage.CheckoutExpectSuccess(billingDetailsData);
 
-		console.table(testBillingDetails);
+		console.table(billingDetailsData);
 		console.log("Checkout successful")
 
 		await TakeAndAttachScreenshot(page, testInfo, "Test2_1", "Order summary after checkout");		//Take Screenshot
