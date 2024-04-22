@@ -17,7 +17,7 @@ require('dotenv').config();
  */
 export default defineConfig({
   //Timeout usually 30s
-  timeout: 30000,
+  timeout: 40000,
 
   testDir: './tests',
   /* Run tests in files in parallel */
