@@ -3,24 +3,15 @@ import { TakeAndAttachScreenshot } from '../utils/HelperMethods';
 import { NavBar } from '../POMClasses/POMClasses'
 
 import { discountsData } from '../models/Discount';
-import { productsData } from '../models/Product';
 import { billingDetailsData as bdData } from '../models/BillingDetails';
 const billingDetailsData = bdData[0];
 
 test.describe("my testcases", () => {
 
 	for (const testDiscount of discountsData) {
-		test(`Login and apply discount ${testDiscount.code}`, async ({ page, navigateAndLogin }, testInfo) => {
+		test(`Login and apply discount ${testDiscount.code}`, async ({ page, loginAndFillCart }, testInfo) => {
 			//Shop
-			const navbar: NavBar = navigateAndLogin;
-			const shopPage = await navbar.GoShop();		//Go to shop page
-
-			console.log("Add items to cart")
-			for (let i = 0; i < productsData.length; i++) {
-				let item = productsData[i].product;
-				await shopPage.AddToCart(item);
-				console.log(`Added \"${item}\" to the cart`)
-			}
+			const navbar: NavBar = loginAndFillCart;
 
 			//Cart
 			const cartPage = await navbar.GoCart();
@@ -51,17 +42,9 @@ test.describe("my testcases", () => {
 		})
 	}
 
-	test("Login and checkout with a cheque", async ({ page, navigateAndLogin }, testInfo) => {
+	test("Login and checkout with a cheque", async ({ page, loginAndFillCart }, testInfo) => {
 		//Shop
-		const navbar: NavBar = navigateAndLogin;
-		const shopPage = await navbar.GoShop();		//Go to shop page
-
-		console.log("Add items to cart")
-		for (let i = 0; i < productsData.length; i++) {
-			let item = productsData[i].product;
-			await shopPage.AddToCart(item);
-			console.log(`Added \"${item}\" to the cart`)
-		}
+		const navbar: NavBar = loginAndFillCart;
 
 		//Checkout
 		const checkoutPage = await navbar.GoCheckout();

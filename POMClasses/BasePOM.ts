@@ -5,9 +5,9 @@ import { Page } from "@playwright/test";
 
 export default class BasePOM
 {
-    readonly page :Page;
+    readonly page: Page;
 
-    constructor(page :Page){
+    constructor(page: Page){
         this.page = page;
     }
 }

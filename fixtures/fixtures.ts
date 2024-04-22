@@ -2,30 +2,17 @@
 //17/04/24
 
 import { test as base } from '@playwright/test';
-
 import NavBar from '../POMClasses/NavBar';
-import {
-	ProductData,
-	DiscountData,
-	BillingDetailsData
-} from '../models/Models'
+import { productsData } from '../models/Product';
 
-// import data from '../testData/testData.json';
-
-import productData from '../testData/products.json';
-import discountData from '../testData/discounts.json';
-import billingDetailsData from '../testData/billingDetails.json';
-
-type TestFixtures = { 
-	navigateAndLogin: NavBar, 
-	testProducts: ProductData[], 
-	testDiscount: DiscountData, 
-	testBillingDetails: BillingDetailsData
+type TestFixtures = {
+	loginAndNavigate: NavBar,
+	loginAndFillCart: NavBar,
 };
 
 export const test = base.extend<TestFixtures>({
 	//Navigates and logs into an account, returns a navbar POM instance
-    navigateAndLogin: async ({ page }, use) => {
+    loginAndNavigate: async ({ page }, use) => {
         //---Setup---
 		// Go to website url
 		await page.goto('');		//Navigate
@@ -52,16 +39,35 @@ export const test = base.extend<TestFixtures>({
         await use(navbar);
 
         //---Teardown---
-		//Empty cart
-		const cartPage = await navbar.GoCart();		//Go to cart page
-		await cartPage.MakeCartEmpty();
-		console.log("Emptied cart successfully")
-
 		//Logout
 		const accountPage = await navbar.GoAccount();		//Go to account page
 		await accountPage.LogoutExpectSuccess();
 		console.log("Logout successful")
     },
+
+	loginAndFillCart: async ({ loginAndNavigate }, use) => {
+        //---Setup---
+		// Go to shop page
+		const navbar: NavBar = loginAndNavigate;
+		const shopPage = await navbar.GoShop();
+
+		// Add products to cart
+		console.log("Add items to cart")
+		for (let i = 0; i < productsData.length; i++) {
+			let item = productsData[i].product;
+			await shopPage.AddToCart(item);
+			console.log(`Added \"${item}\" to the cart`)
+		}
+
+        //---Test---
+        await use(navbar);
+		
+		//---Teardown---
+		//Empty cart
+		const cartPage = await navbar.GoCart();		//Go to cart page
+		await cartPage.MakeCartEmpty();
+		console.log("Emptied cart successfully")
+	}
 });
 
 export { expect } from '@playwright/test';

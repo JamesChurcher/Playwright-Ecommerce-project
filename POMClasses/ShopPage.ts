@@ -10,7 +10,7 @@ export default class ShopPage extends BasePOM
     //Locator declarations
     #numItemsInCart = this.page.getByText(/\d+ items?/);
 
-    constructor(page :Page) {
+    constructor(page: Page) {
         super(page)
     }
 
@@ -20,7 +20,7 @@ export default class ShopPage extends BasePOM
         return Number(quantity);
     }
 
-    public async AddToCart(item :string){
+    public async AddToCart(item: string){
         //Get add to cart button
         const btn = this.page.getByLabel("Add “"+ item +"” to your cart");      //TODO move locator to top of page
 

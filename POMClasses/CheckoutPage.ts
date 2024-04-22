@@ -25,7 +25,7 @@ export default class CheckoutPage extends BasePOM
         "cod": this.page.getByText('Cash on delivery'),
     }
 
-    constructor(page :Page) {
+    constructor(page: Page) {
         super(page)
     }
 
@@ -34,35 +34,35 @@ export default class CheckoutPage extends BasePOM
         await this.#placeOrderButton.click();
     }
 
-    public async SetFirstName(firstName :string){
+    public async SetFirstName(firstName: string){
         await this.#firstName.fill(firstName);
     }
 
-    public async SetLastName(lastName :string){
+    public async SetLastName(lastName: string){
         await this.#lastName.fill(lastName);
     }
 
-    public async SelectCountry(country :string){
+    public async SelectCountry(country: string){
         await this.#country.selectOption(country);
     }
 
-    public async SetStreet(street :string){
+    public async SetStreet(street: string){
         await this.#street.fill(street);
     }
 
-    public async SetCity(city :string){
+    public async SetCity(city: string){
         await this.#city.fill(city);
     }
 
-    public async SetPostcode(postcode :string){
+    public async SetPostcode(postcode: string){
         await this.#postcode.fill(postcode);
     }
 
-    public async SetPhoneNumber(phoneNumber :string){
+    public async SetPhoneNumber(phoneNumber: string){
         await this.#phoneNumber.fill(phoneNumber);
     }
 
-    public async SelectPaymentMethod(paymentMethod :string){
+    public async SelectPaymentMethod(paymentMethod: string){
         await this.#paymentMethods[paymentMethod].click();
     }
 

@@ -16,7 +16,7 @@ export default class NavBar extends BasePOM
     #checkoutButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Checkout' });
     #popup: Locator = this.page.getByRole('link', { name: 'Dismiss' });
 
-    constructor(page :Page) {
+    constructor(page: Page) {
         super(page);
     }
 

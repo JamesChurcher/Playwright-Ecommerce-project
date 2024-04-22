@@ -10,7 +10,7 @@ export default class OrderSummaryPage extends BasePOM
     //Locator declarations
     #orderNumber: Locator = this.page.getByText("Order number");
 
-    constructor(page :Page) {
+    constructor(page: Page) {
         super(page)
     }
 

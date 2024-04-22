@@ -21,7 +21,7 @@ export default class CartPage extends BasePOM
     #discountSubmit: Locator = this.page.getByRole('button', { name: 'Apply coupon' });
     #discountRemove: Locator = this.page.getByRole('link', { name: '[Remove]' });
 
-    constructor(page :Page) {
+    constructor(page: Page) {
         super(page);
     }
 
@@ -54,7 +54,7 @@ export default class CartPage extends BasePOM
     //---High-level service methods---
 
     //Fill in and submit the given coupon
-    public async ApplyDiscount(coupon :string){
+    public async ApplyDiscount(coupon: string){
         await this.#discountField.fill(coupon);
         await this.#discountSubmit.click();
         

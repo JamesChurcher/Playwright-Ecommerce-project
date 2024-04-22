@@ -12,7 +12,7 @@ export default class LoginPage extends BasePOM
     //Locator declarations
     #usernameField: Locator = this.page.getByLabel("username");
     #passwordField: Locator = this.page.locator('#password');
-    #submitButton: Locator = this.page.getByRole("button", { name : "Log in" });
+    #submitButton: Locator = this.page.getByRole("button", { name:  "Log in" });
     #logoutButton: Locator = this.page.getByRole('link', { name: 'Logout' });
 
     constructor(page: Page) {
@@ -20,12 +20,12 @@ export default class LoginPage extends BasePOM
     }
 
     //---Service methods---
-    public async SetUsername(username :string){
+    public async SetUsername(username: string){
         await this.#usernameField.click();
         await this.#usernameField.fill(username);
     }
 
-    public async SetPassword(password :string){
+    public async SetPassword(password: string){
         await this.#passwordField.click();
         await this.#passwordField.fill(password);
     }
@@ -37,7 +37,7 @@ export default class LoginPage extends BasePOM
     //---High-level service methods---
 
     //Log into an account successfully
-    public async LoginExpectSuccess(username :string, password :string){
+    public async LoginExpectSuccess(username: string, password: string){
         await this.SetUsername(username);
         await this.SetPassword(password);
         await this.SubmitLogin();
