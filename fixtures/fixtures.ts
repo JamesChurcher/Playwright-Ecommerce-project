@@ -7,7 +7,9 @@ import { productsData } from '../models/Product';
 
 type TestFixtures = {
 	loginAndNavigate: NavBar,
-	loginAndFillCart: NavBar,
+	loginFillCart: NavBar,
+	loginRandomCart: NavBar,
+	randomProducts: number;
 };
 
 export const test = base.extend<TestFixtures>({
@@ -45,7 +47,8 @@ export const test = base.extend<TestFixtures>({
 		console.log("Logout successful")
     },
 
-	loginAndFillCart: async ({ loginAndNavigate }, use) => {
+	//While logged in, on the shop page adds products to the cart from the test data
+	loginFillCart: async ({ loginAndNavigate }, use) => {
         //---Setup---
 		// Go to shop page
 		const navbar: NavBar = loginAndNavigate;
@@ -67,7 +70,38 @@ export const test = base.extend<TestFixtures>({
 		const cartPage = await navbar.GoCart();		//Go to cart page
 		await cartPage.MakeCartEmpty();
 		console.log("Emptied cart successfully")
-	}
+	},
+
+	//While logged in, on the shop page adds some random products to the cart
+	loginRandomCart: async ({ loginAndNavigate, randomProducts }, use) => {
+        //---Setup---
+		// Go to shop page
+		const navbar: NavBar = loginAndNavigate;
+		const shopPage = await navbar.GoShop();
+
+		// Get products
+		const names: string[] = await shopPage.GetProductNames();
+
+		// Add products to cart
+		console.log("Add items to cart")
+		for (let i=0; i<randomProducts; i++){
+			let product = names[Math.floor(Math.random() * names.length)];
+			await shopPage.AddToCart(product);
+			console.log(`Added \"${product}\" to the cart`)
+		}
+
+        //---Test---
+        await use(navbar);
+		
+		//---Teardown---
+		//Empty cart
+		const cartPage = await navbar.GoCart();		//Go to cart page
+		await cartPage.MakeCartEmpty();
+		console.log("Emptied cart successfully")
+	},
+
+	//Default number of products to add to cart
+	randomProducts: 3,
 });
 
 export { expect } from '@playwright/test';

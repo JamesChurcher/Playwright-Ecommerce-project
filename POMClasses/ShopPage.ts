@@ -8,7 +8,8 @@ import BasePOM from "./BasePOM";
 export default class ShopPage extends BasePOM
 {
     //Locator declarations
-    #numItemsInCart = this.page.getByText(/\d+ items?/);
+    #numItemsInCart: Locator = this.page.getByText(/\d+ items?/);
+    #productsOnPage: Locator = this.page.locator(".product").locator('h2');
 
     constructor(page: Page) {
         super(page)
@@ -49,5 +50,23 @@ export default class ShopPage extends BasePOM
         if (!flag){
             throw new Error("Timed out waiting for the cart quantity to increment after adding an item")    //Throw error if cart quantity did not increment
         }
+    }
+
+    // public async GetProductNames(){
+    //     const pee = (await this.#productsOnPage.all()).map(async locator => await locator.textContent());
+    //     return pee;
+    // }
+
+    public async GetProductNames(){
+        let products: string[] = [];    //List of product names
+
+        for ( const locator of await this.#productsOnPage.all()){
+            let name = await locator.textContent();
+            if (name){
+                products.push(name);
+            }
+        }
+
+        return products;
     }
 }

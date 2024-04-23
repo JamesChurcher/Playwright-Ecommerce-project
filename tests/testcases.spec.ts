@@ -6,12 +6,14 @@ import { discountsData } from '../models/Discount';
 import { billingDetailsData as bdData } from '../models/BillingDetails';
 const billingDetailsData = bdData[0];
 
+test.use({ randomProducts: 4 })		//Add 4 random products to cart
+
 test.describe("my testcases", () => {
 
 	for (const testDiscount of discountsData) {
-		test(`Login and apply discount ${testDiscount.code}`, async ({ page, loginAndFillCart }, testInfo) => {
+		test(`Login and apply discount ${testDiscount.code}`, async ({ page, loginFillCart }, testInfo) => {
 			//Shop
-			const navbar: NavBar = loginAndFillCart;
+			const navbar: NavBar = loginFillCart;
 
 			//Cart
 			const cartPage = await navbar.GoCart();
@@ -42,9 +44,9 @@ test.describe("my testcases", () => {
 		})
 	}
 
-	test("Login and checkout with a cheque", async ({ page, loginAndFillCart }, testInfo) => {
+	test("Login and checkout with a cheque", async ({ page, loginRandomCart }, testInfo) => {
 		//Shop
-		const navbar: NavBar = loginAndFillCart;
+		const navbar: NavBar = loginRandomCart;
 
 		//Checkout
 		const checkoutPage = await navbar.GoCheckout();
