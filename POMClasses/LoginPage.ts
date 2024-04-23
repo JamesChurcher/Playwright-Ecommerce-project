@@ -1,7 +1,7 @@
 // James Churcher
 // 03/04/24
 
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import BasePOM from "./BasePOM";
 
 import { AccountPage } from "./POMClasses";
@@ -41,14 +41,9 @@ export default class LoginPage extends BasePOM
         await this.SetUsername(username);
         await this.SetPassword(password);
         await this.SubmitLogin();
-        
-        try {
-            await this.logoutButton.waitFor({state: 'visible', timeout: 4000});        //Wait for logout link to show
-        }
-        catch (error){
-            error.message = "Could not login\n" + error.message;        //Throw an error if we could not login properly
-            throw error;
-        }
+
+        //Confirm we can login
+        await expect(this.logoutButton, "Could not login").toBeVisible();
         
         return new AccountPage(this.page);
     }

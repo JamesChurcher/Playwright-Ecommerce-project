@@ -1,7 +1,7 @@
 // James Churcher
 // 03/04/24
 
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import BasePOM from "./BasePOM";
 import { ToFloat } from "../utils/HelperMethods";
 
@@ -57,14 +57,9 @@ export default class CartPage extends BasePOM
     public async ApplyDiscount(coupon: string){
         await this.discountField.fill(coupon);
         await this.discountSubmit.click();
-        
-        try {
-            await this.coupon.waitFor({ state: "visible", timeout: 4000 });    //Wait for coupon to be applied
-        }
-        catch (error){
-            error.message = "Could not apply coupon code / coupon code not accepted\n" + error.message;     //Throw error if we could not apply coupon
-            throw error;
-        }
+
+        //Confirm the discount code has been accepted
+        await expect(this.coupon, `Could not apply coupon code ${coupon} / coupon code not accepted`).toBeVisible();
     }
 
     //Remove any applied coupon
@@ -73,13 +68,8 @@ export default class CartPage extends BasePOM
             await this.discountRemove.click();
         }
 
-        try {
-            await this.coupon.waitFor({ state: "hidden", timeout: 4000 });    //Wait for coupon to be removed
-        }
-        catch (error){
-            error.message = "Could not remove coupon code\n" + error.message;       //Throw error if we could not remove coupon
-            throw error;
-        }
+        //Confirm the discount code has been removed
+        await expect(this.coupon, "Could not remove coupon code").toBeHidden();
     }
 
     //Method empties cart by removing discount and all items
