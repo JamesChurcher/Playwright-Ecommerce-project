@@ -15,7 +15,6 @@ type TestFixtures = {
 export const test = base.extend<TestFixtures>({
 	//Navigates and logs into an account, returns a navbar POM instance
     loginAndNavigate: async ({ page }, use) => {
-        //---Setup---
 		// Go to website url
 		await page.goto('');		//Navigate
 
@@ -37,10 +36,8 @@ export const test = base.extend<TestFixtures>({
 		await loginPage.LoginExpectSuccess(username, password);
 		console.log("Login successful");
 
-        //---Test---
         await use(navbar);
 
-        //---Teardown---
 		//Logout
 		const accountPage = await navbar.GoAccount();		//Go to account page
 		await accountPage.LogoutExpectSuccess();
@@ -49,7 +46,6 @@ export const test = base.extend<TestFixtures>({
 
 	//While logged in, on the shop page adds products to the cart from the test data
 	loginFillCart: async ({ loginAndNavigate }, use) => {
-        //---Setup---
 		// Go to shop page
 		const navbar: NavBar = loginAndNavigate;
 		const shopPage = await navbar.GoShop();
@@ -62,10 +58,8 @@ export const test = base.extend<TestFixtures>({
 			console.log(`Added \"${item}\" to the cart`)
 		}
 
-        //---Test---
         await use(navbar);
 		
-		//---Teardown---
 		//Empty cart
 		const cartPage = await navbar.GoCart();		//Go to cart page
 		await cartPage.MakeCartEmpty();
@@ -74,7 +68,6 @@ export const test = base.extend<TestFixtures>({
 
 	//While logged in, on the shop page adds some random products to the cart
 	loginRandomCart: async ({ loginAndNavigate, randomProducts }, use) => {
-        //---Setup---
 		// Go to shop page
 		const navbar: NavBar = loginAndNavigate;
 		const shopPage = await navbar.GoShop();
@@ -90,10 +83,8 @@ export const test = base.extend<TestFixtures>({
 			console.log(`Added \"${product}\" to the cart`)
 		}
 
-        //---Test---
         await use(navbar);
 		
-		//---Teardown---
 		//Empty cart
 		const cartPage = await navbar.GoCart();		//Go to cart page
 		await cartPage.MakeCartEmpty();

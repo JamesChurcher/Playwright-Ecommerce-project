@@ -9,24 +9,45 @@ export default class ShopPage extends BasePOM
 {
     //Locator declarations
     private readonly numItemsInCart: Locator = this.page.getByText(/\d+ items?/);
-    private readonly productsOnPage: Locator = this.page.locator(".product").locator('h2');
+    private readonly productsInShop: Locator = this.page.locator('.product');
+    private readonly productNames: Locator = this.page.locator('h2');
+    private readonly productAddBtn: Locator = this.page.getByText("Add to cart");
+
+    private productToBtnDict: { [key: string]: Locator } = {};
 
     constructor(page: Page) {
         super(page)
     }
 
     //---Service methods---
+    //Returns the number of items in the cart
     private async GetCartQuantity(){
         let quantity = (await this.numItemsInCart.innerText()).replace(/\D/g, "");
         return Number(quantity);
     }
 
+    private async PopulateDict(){
+        for (const product of await this.productsInShop.all()) {
+            let name = await product.locator(this.productNames).textContent();
+            let btn = product.locator(this.productAddBtn);
+            
+            if (name) {
+                this.productToBtnDict[name] = btn;
+            }
+        }
+    }
+
+    //Adds the given product to the cart if it exists in the shop
     public async AddToCart(item: string){
+        //Populate the dictionary
+        if (Object.keys(this.productToBtnDict).length == 0)
+            await this.PopulateDict();
+
         //Get add to cart button
-        const btn = this.page.getByLabel("Add “"+ item +"” to your cart");      //TODO move locator to top of page
+        const btn = this.productToBtnDict[item];
 
         //Throw error if item is not on store page
-        if (!await btn.isVisible()){
+        if (!btn){
             throw new Error(`Could not find product ${item} on the store page`)
         }
 
@@ -52,15 +73,11 @@ export default class ShopPage extends BasePOM
         }
     }
 
-    // public async GetProductNames(){
-    //     const pee = (await this.productsOnPage.all()).map(async locator => await locator.textContent());
-    //     return pee;
-    // }
-
+    //Returns all products on the page
     public async GetProductNames(){
         let products: string[] = [];    //List of product names
 
-        for ( const locator of await this.productsOnPage.all()){
+        for ( const locator of await this.productNames.all()){
             let name = await locator.textContent();
             if (name){
                 products.push(name);
