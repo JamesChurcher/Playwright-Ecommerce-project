@@ -8,7 +8,7 @@ import BasePOM from "./BasePOM";
 export default class OrderSummaryPage extends BasePOM
 {
     //Locator declarations
-    #orderNumber: Locator = this.page.getByText("Order number");
+    private readonly orderNumber: Locator = this.page.getByText("Order number");
 
     constructor(page: Page) {
         super(page)
@@ -16,6 +16,6 @@ export default class OrderSummaryPage extends BasePOM
 
     //---Service methods---
     public async GetOrderNumber(){
-        return (await this.#orderNumber.innerText()).replace(/\D/g, "");
+        return (await this.orderNumber.innerText()).replace(/\D/g, "");
     }
 }

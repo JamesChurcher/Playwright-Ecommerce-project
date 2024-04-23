@@ -10,11 +10,11 @@ import { ShopPage, AccountPage, CartPage, CheckoutPage, LoginPage } from "./POMC
 export default class NavBar extends BasePOM
 {
     //Locator declarations
-    #shopButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Shop' });
-    #accountButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'My account' });
-    #cartButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Cart' });
-    #checkoutButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Checkout' });
-    #popup: Locator = this.page.getByRole('link', { name: 'Dismiss' });
+    private readonly shopButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Shop' });
+    private readonly accountButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'My account' });
+    private readonly cartButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Cart' });
+    private readonly checkoutButton: Locator = this.page.locator('#menu-main').getByRole('link', { name: 'Checkout' });
+    private readonly popup: Locator = this.page.getByRole('link', { name: 'Dismiss' });
 
     constructor(page: Page) {
         super(page);
@@ -22,35 +22,35 @@ export default class NavBar extends BasePOM
 
     //---Service methods---
     public async GoShop(){
-        await this.#shopButton.click();
+        await this.shopButton.click();
         await this.page.waitForURL(/shop/);
 
         return new ShopPage(this.page);
     }
 
     public async GoAccount(){
-        await this.#accountButton.click();
+        await this.accountButton.click();
         await this.page.waitForURL(/account/);
 
         return new AccountPage(this.page);
     }
     
     public async GoLogin(){
-        await this.#accountButton.click();
+        await this.accountButton.click();
         await this.page.waitForURL(/account/);
 
         return new LoginPage(this.page);
     }
 
     public async GoCart(){
-        await this.#cartButton.click();
+        await this.cartButton.click();
         await this.page.waitForURL(/cart/);
 
         return new CartPage(this.page);
     }
 
     public async GoCheckout(){
-        await this.#checkoutButton.click();
+        await this.checkoutButton.click();
         await this.page.waitForURL(/checkout/);
         
         return new CheckoutPage(this.page);
@@ -58,8 +58,8 @@ export default class NavBar extends BasePOM
 
     //Dismiss popup
     public async DismissPopup(){
-        if (await this.#popup.isVisible()){
-            await this.#popup.click();
+        if (await this.popup.isVisible()){
+            await this.popup.click();
         }
     }
 }

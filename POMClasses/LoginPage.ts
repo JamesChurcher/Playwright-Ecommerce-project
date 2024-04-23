@@ -10,10 +10,10 @@ import { AccountPage } from "./POMClasses";
 export default class LoginPage extends BasePOM
 {
     //Locator declarations
-    #usernameField: Locator = this.page.getByLabel("username");
-    #passwordField: Locator = this.page.locator('#password');
-    #submitButton: Locator = this.page.getByRole("button", { name:  "Log in" });
-    #logoutButton: Locator = this.page.getByRole('link', { name: 'Logout' });
+    private readonly usernameField: Locator = this.page.getByLabel("username");
+    private readonly passwordField: Locator = this.page.locator('#password');
+    private readonly submitButton: Locator = this.page.getByRole("button", { name:  "Log in" });
+    private readonly logoutButton: Locator = this.page.getByRole('link', { name: 'Logout' });
 
     constructor(page: Page) {
         super(page);
@@ -21,17 +21,17 @@ export default class LoginPage extends BasePOM
 
     //---Service methods---
     public async SetUsername(username: string){
-        await this.#usernameField.click();
-        await this.#usernameField.fill(username);
+        await this.usernameField.click();
+        await this.usernameField.fill(username);
     }
 
     public async SetPassword(password: string){
-        await this.#passwordField.click();
-        await this.#passwordField.fill(password);
+        await this.passwordField.click();
+        await this.passwordField.fill(password);
     }
 
     public async SubmitLogin(){
-        await this.#submitButton.click();
+        await this.submitButton.click();
     }
 
     //---High-level service methods---
@@ -43,7 +43,7 @@ export default class LoginPage extends BasePOM
         await this.SubmitLogin();
         
         try {
-            await this.#logoutButton.waitFor({state: 'visible', timeout: 4000});        //Wait for logout link to show
+            await this.logoutButton.waitFor({state: 'visible', timeout: 4000});        //Wait for logout link to show
         }
         catch (error){
             error.message = "Could not login\n" + error.message;        //Throw an error if we could not login properly

@@ -10,10 +10,10 @@ import { AccountOrdersPage, LoginPage } from "./POMClasses";
 export default class AccountPage extends BasePOM
 {
     //Locator declarations
-    #navBar: Locator = this.page.locator(".entry-content").getByRole('list');
-    #ordersButton: Locator = this.#navBar.getByText("Orders");
-    #logoutButton: Locator = this.#navBar.getByText("Logout");
-    #loginButton: Locator = this.page.getByRole('button', { name: 'Log in' });
+    private readonly navBar: Locator = this.page.locator(".entry-content").getByRole('list');
+    private readonly ordersButton: Locator = this.navBar.getByText("Orders");
+    private readonly logoutButton: Locator = this.navBar.getByText("Logout");
+    private readonly loginButton: Locator = this.page.getByRole('button', { name: 'Log in' });
 
     constructor(page: Page) {
         super(page);
@@ -21,7 +21,7 @@ export default class AccountPage extends BasePOM
 
     //---Service methods---
     public async GoAccountOrders(){
-        await this.#ordersButton.click();
+        await this.ordersButton.click();
         
         return new AccountOrdersPage(this.page);
     }
@@ -30,11 +30,11 @@ export default class AccountPage extends BasePOM
 
     //Log out of the account successfully
     public async LogoutExpectSuccess(){
-        await this.#logoutButton.click();
+        await this.logoutButton.click();
         
         //Wait for logout
         try {
-            await this.#loginButton.waitFor({state: 'visible', timeout: 4000});     //Wait for the login button to show
+            await this.loginButton.waitFor({state: 'visible', timeout: 4000});     //Wait for the login button to show
         }
         catch (error){
             error.message = "Could not logout\n" + error.message;       //Throw an error if we could not logout properly

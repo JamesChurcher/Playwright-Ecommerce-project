@@ -10,17 +10,17 @@ import { OrderSummaryPage } from "./POMClasses";
 export default class CheckoutPage extends BasePOM
 {
     //Locator declarations
-    #placeOrderButton: Locator = this.page.getByRole('button', { name: 'Place order' });
+    private readonly placeOrderButton: Locator = this.page.getByRole('button', { name: 'Place order' });
     
-    #firstName: Locator = this.page.locator('#billing_first_name');
-    #lastName: Locator = this.page.locator('#billing_last_name');
-    #country: Locator = this.page.locator('#billing_country');
-    #street: Locator = this.page.locator('#billing_address_1');
-    #city: Locator = this.page.locator('#billing_city');
-    #postcode: Locator = this.page.locator('#billing_postcode');
-    #phoneNumber: Locator = this.page.getByLabel('Phone');
+    private readonly firstName: Locator = this.page.locator('#billing_first_name');
+    private readonly lastName: Locator = this.page.locator('#billing_last_name');
+    private readonly country: Locator = this.page.locator('#billing_country');
+    private readonly street: Locator = this.page.locator('#billing_address_1');
+    private readonly city: Locator = this.page.locator('#billing_city');
+    private readonly postcode: Locator = this.page.locator('#billing_postcode');
+    private readonly phoneNumber: Locator = this.page.getByLabel('Phone');
 
-    #paymentMethods = {
+    private readonly paymentMethods = {
         "cheque": this.page.getByText('Check payments'),
         "cod": this.page.getByText('Cash on delivery'),
     }
@@ -31,39 +31,39 @@ export default class CheckoutPage extends BasePOM
 
     //---Service methods---
     public async PlaceOrder(){
-        await this.#placeOrderButton.click();
+        await this.placeOrderButton.click();
     }
 
     public async SetFirstName(firstName: string){
-        await this.#firstName.fill(firstName);
+        await this.firstName.fill(firstName);
     }
 
     public async SetLastName(lastName: string){
-        await this.#lastName.fill(lastName);
+        await this.lastName.fill(lastName);
     }
 
     public async SelectCountry(country: string){
-        await this.#country.selectOption(country);
+        await this.country.selectOption(country);
     }
 
     public async SetStreet(street: string){
-        await this.#street.fill(street);
+        await this.street.fill(street);
     }
 
     public async SetCity(city: string){
-        await this.#city.fill(city);
+        await this.city.fill(city);
     }
 
     public async SetPostcode(postcode: string){
-        await this.#postcode.fill(postcode);
+        await this.postcode.fill(postcode);
     }
 
     public async SetPhoneNumber(phoneNumber: string){
-        await this.#phoneNumber.fill(phoneNumber);
+        await this.phoneNumber.fill(phoneNumber);
     }
 
     public async SelectPaymentMethod(paymentMethod: string){
-        await this.#paymentMethods[paymentMethod].click();
+        await this.paymentMethods[paymentMethod].click();
     }
 
     //---Higher level service methods---

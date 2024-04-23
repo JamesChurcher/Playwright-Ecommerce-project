@@ -9,17 +9,17 @@ import { ToFloat } from "../utils/HelperMethods";
 export default class CartPage extends BasePOM
 {
     //Locator declaratons
-    #total: Locator = this.page.locator(".order-total");
-    #shipping: Locator = this.page.locator("#shipping_method");
-    #coupon: Locator = this.page.locator(".cart-discount");
-    #subtotal: Locator = this.page.locator(".cart-subtotal")
+    private readonly total: Locator = this.page.locator(".order-total");
+    private readonly shipping: Locator = this.page.locator("#shipping_method");
+    private readonly coupon: Locator = this.page.locator(".cart-discount");
+    private readonly subtotal: Locator = this.page.locator(".cart-subtotal")
 
-    #cartEmpty: Locator = this.page.locator(".cart-empty");
-    #removeFromCart: Locator = this.page.getByLabel('Remove this item');
+    private readonly cartEmpty: Locator = this.page.locator(".cart-empty");
+    private readonly removeFromCart: Locator = this.page.getByLabel('Remove this item');
 
-    #discountField: Locator = this.page.getByPlaceholder('Coupon code');
-    #discountSubmit: Locator = this.page.getByRole('button', { name: 'Apply coupon' });
-    #discountRemove: Locator = this.page.getByRole('link', { name: '[Remove]' });
+    private readonly discountField: Locator = this.page.getByPlaceholder('Coupon code');
+    private readonly discountSubmit: Locator = this.page.getByRole('button', { name: 'Apply coupon' });
+    private readonly discountRemove: Locator = this.page.getByRole('link', { name: '[Remove]' });
 
     constructor(page: Page) {
         super(page);
@@ -27,39 +27,39 @@ export default class CartPage extends BasePOM
 
     //---Service methods---
     public async GetTotal(){
-        let text = await this.#total.innerText();
+        let text = await this.total.innerText();
         return ToFloat(text);
     }
 
     public async GetShipping(){
-        let text = await this.#shipping.innerText();
+        let text = await this.shipping.innerText();
         return ToFloat(text);
     }
 
     public async GetCoupon(){
-        let text = await this.#coupon.innerText();
+        let text = await this.coupon.innerText();
         return ToFloat(text);
     }
 
     public async GetSubtotal(){
-        let text = await this.#subtotal.innerText();
+        let text = await this.subtotal.innerText();
         return ToFloat(text);
     }
 
     //Check if the cart is empty
     public async IsEmpty(){
-        return await this.#cartEmpty.isVisible();
+        return await this.cartEmpty.isVisible();
     }
 
     //---High-level service methods---
 
     //Fill in and submit the given coupon
     public async ApplyDiscount(coupon: string){
-        await this.#discountField.fill(coupon);
-        await this.#discountSubmit.click();
+        await this.discountField.fill(coupon);
+        await this.discountSubmit.click();
         
         try {
-            await this.#coupon.waitFor({ state: "visible", timeout: 4000 });    //Wait for coupon to be applied
+            await this.coupon.waitFor({ state: "visible", timeout: 4000 });    //Wait for coupon to be applied
         }
         catch (error){
             error.message = "Could not apply coupon code / coupon code not accepted\n" + error.message;     //Throw error if we could not apply coupon
@@ -69,12 +69,12 @@ export default class CartPage extends BasePOM
 
     //Remove any applied coupon
     public async RemoveDiscount(){
-        if(await this.#discountRemove.isVisible()){
-            await this.#discountRemove.click();
+        if(await this.discountRemove.isVisible()){
+            await this.discountRemove.click();
         }
 
         try {
-            await this.#coupon.waitFor({ state: "hidden", timeout: 4000 });    //Wait for coupon to be removed
+            await this.coupon.waitFor({ state: "hidden", timeout: 4000 });    //Wait for coupon to be removed
         }
         catch (error){
             error.message = "Could not remove coupon code\n" + error.message;       //Throw error if we could not remove coupon
@@ -90,7 +90,7 @@ export default class CartPage extends BasePOM
         //Remove items
 		while (!await this.IsEmpty()){
             //First item in cart
-			let element = this.#removeFromCart.first();
+			let element = this.removeFromCart.first();
 
             //Click to remove first item from the cart
             try {
