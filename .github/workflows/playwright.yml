@@ -26,7 +26,6 @@ jobs:
         echo "USER_NAME=${{ secrets.USER_NAME }}" >> ./env/.env.local
         echo "PASSWORD=${{ secrets.PASSWORD }}" >> ./env/.env.local
         echo "URL=${{ vars.URL }}" >> ./env/.env.local
-        echo "DATAINDEX=${{ vars.DATAINDEX }}" >> ./env/.env.local
 
         echo "cat ./env/.env.local"
         cat ./env/.env.local
