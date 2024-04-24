@@ -9,7 +9,7 @@ type TestFixtures = {
 	loginAndNavigate: NavBar,
 	loginFillCart: NavBar,
 	loginRandomCart: NavBar,
-	randomProducts: number;
+	randomProducts: number,
 };
 
 export const test = base.extend<TestFixtures>({
