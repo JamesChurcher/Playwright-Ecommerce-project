@@ -30,6 +30,8 @@ test.describe("my testcases", () => {
 			let actualDiscount = (discount / subtotal * 100).toFixed(2)
 			let expectedTotal = (subtotal + shipping - discount).toFixed(2)
 
+			await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
+
 			expect(actualDiscount, "Incorrect discount applied").toEqual((testDiscount.value).toFixed(2))	//Assert the amount deducted from discount
 			expect(total.toFixed(2), "Incorrect final total").toEqual(expectedTotal);						//Assert the price is correct
 
@@ -39,8 +41,6 @@ test.describe("my testcases", () => {
 				"Discount":{"Expected": (testDiscount.value).toFixed(2)+"%","Actual": actualDiscount+"%"},
 				"Total":{"Expected": "£"+expectedTotal,"Actual": "£"+total.toFixed(2)}
 			})
-
-			await TakeAndAttachScreenshot(page, testInfo, "Test1_1", "Cart with discount page");		//Take Screenshot
 		})
 	}
 
@@ -69,10 +69,10 @@ test.describe("my testcases", () => {
 		let allOrderNums = await accountOrdersPage.GetAccountOrders();
 		console.log("All order numbers listed: " + allOrderNums);
 
+		await TakeAndAttachScreenshot(page, testInfo, "Test2_2", "All orders listed under this account");		//Take Screenshot
+
 		expect(allOrderNums, "Order not listed under this account").toContain(orderNumber);		//Assert new order number is listed on the page
 
 		console.log("\u001b[1;32m Test Pass\x1b[0m")
-
-		await TakeAndAttachScreenshot(page, testInfo, "Test2_2", "All orders listed under this account");		//Take Screenshot
 	})
 })

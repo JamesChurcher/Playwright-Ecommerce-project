@@ -8,7 +8,10 @@ import { Page, TestInfo } from "@playwright/test";
 const screenshotPath = 'screenshots/'
 
 //Takes a screenshot and attaches it to the test report
-export async function TakeAndAttachScreenshot(page :Page, testInfo :TestInfo, name :string, desc :string){
+export async function TakeAndAttachScreenshot(page :Page, testInfo :TestInfo, name :string, desc :string, unique :boolean = false){
+    if (unique){
+        name += "_" + testInfo.testId;
+    }
     const screenshot = await page.screenshot({ path: (screenshotPath+name+'.png'), fullPage: true });		//Take Screenshot
 	await testInfo.attach(desc, { body: screenshot, contentType: 'image/png' });   //Attach Screenshot
 }
