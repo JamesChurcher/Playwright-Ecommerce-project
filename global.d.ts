@@ -5,6 +5,8 @@ declare global {
         interface ProcessEnv {
             USER_NAME: string;
             PASSWORD: string;
+            URL: string;
+            UNIQUESCREENSHOTS: string;
         }
     }
 }

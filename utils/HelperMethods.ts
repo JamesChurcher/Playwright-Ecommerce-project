@@ -9,7 +9,7 @@ const screenshotPath = 'screenshots/'
 
 //Takes a screenshot and attaches it to the test report
 export async function TakeAndAttachScreenshot(page :Page, testInfo :TestInfo, name :string, desc :string, unique :boolean = false){
-    if (unique){
+    if (unique || process.env.UNIQUESCREENSHOTS == 'true'){
         name += "_" + testInfo.testId;
     }
     const screenshot = await page.screenshot({ path: (screenshotPath+name+'.png'), fullPage: true });		//Take Screenshot
